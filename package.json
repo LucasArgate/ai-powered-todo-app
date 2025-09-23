@@ -1,0 +1,24 @@
+{
+  "name": "ai-powered-todo-app",
+  "version": "1.0.0",
+  "description": "Smart To-Do List with AI-powered task generation",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+    "build": "pnpm --filter backend build && pnpm --filter frontend build",
+    "start": "concurrently \"pnpm --filter backend start\" \"pnpm --filter frontend start\"",
+    "lint": "pnpm --filter backend lint && pnpm --filter frontend lint",
+    "clean": "pnpm --filter backend clean && pnpm --filter frontend clean"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
