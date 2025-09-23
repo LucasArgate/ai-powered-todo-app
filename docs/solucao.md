@@ -175,12 +175,14 @@ Atualiza as configurações do usuário, incluindo o tipo de integração de IA 
 || :--- | :--- | :--- |
 || `name`| `string` | Opcional. Novo nome do usuário. |
 || `aiIntegrationType`| `string` | Opcional. Tipo de IA ('huggingface' ou 'openrouter'). |
+|| `aiToken`| `string` | Opcional. API Key do provedor de IA escolhido. |
 
 * **Exemplo de Corpo:**
     ```json
     {
       "name": "João Silva",
-      "aiIntegrationType": "openrouter"
+      "aiIntegrationType": "openrouter",
+      "aiToken": "sk-or-v1-abc123..."
     }
     ```
 
@@ -190,7 +192,8 @@ Atualiza as configurações do usuário, incluindo o tipo de integração de IA 
       "id": "123e4567-e89b-12d3-a456-426614174000",
       "name": "João Silva",
       "isAnonymous": true,
-      "aiIntegrationType": "openrouter"
+      "aiIntegrationType": "openrouter",
+      "aiToken": "sk-or-v1-abc123..."
     }
     ```
 
@@ -275,7 +278,7 @@ Cria uma nova lista e suas tarefas usando um prompt de IA.
 | :--- | :--- | :--- |
 | `listName`| `string` | **Obrigatório.** Nome para a nova lista. |
 | `prompt`| `string` | **Obrigatório.** O objetivo para a IA. |
-| `apiKey`| `string` | **Obrigatório.** Chave da API (OpenRouter). |
+**Nota:** A API Key será obtida automaticamente das configurações do usuário (`aiToken`). O usuário deve ter configurado previamente seu token através do endpoint `PATCH /users/me`.
 
 * **Resposta de Sucesso (201 Created):** Retorna a lista completa com as tarefas geradas.
 

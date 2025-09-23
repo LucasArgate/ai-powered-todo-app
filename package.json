@@ -8,10 +8,20 @@
   ],
   "scripts": {
     "dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
+    "dev-api": "pnpm --filter backend dev",
+    "dev-app": "pnpm --filter frontend dev",
     "build": "pnpm --filter backend build && pnpm --filter frontend build",
+    "build-api": "pnpm --filter backend build",
+    "build-app": "pnpm --filter frontend build",
     "start": "concurrently \"pnpm --filter backend start\" \"pnpm --filter frontend start\"",
+    "start-api": "pnpm --filter backend start",
+    "start-app": "pnpm --filter frontend start",
     "lint": "pnpm --filter backend lint && pnpm --filter frontend lint",
-    "clean": "pnpm --filter backend clean && pnpm --filter frontend clean"
+    "lint-api": "pnpm --filter backend lint",
+    "lint-app": "pnpm --filter frontend lint",
+    "clean": "pnpm --filter backend clean && pnpm --filter frontend clean",
+    "clean-api": "pnpm --filter backend clean",
+    "clean-app": "pnpm --filter frontend clean"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

@@ -57,15 +57,20 @@ pnpm dev
 ### Executar aplicações individualmente
 ```bash
 # Backend apenas
-pnpm --filter backend dev
+pnpm dev-api
 
 # Frontend apenas
-pnpm --filter frontend dev
+pnpm dev-app
 ```
 
 ### Build para produção
 ```bash
+# Build de ambas as aplicações
 pnpm build
+
+# Build individual
+pnpm build-api    # Backend apenas
+pnpm build-app    # Frontend apenas
 ```
 
 ## 🎯 Funcionalidades
@@ -98,11 +103,24 @@ Cada tarefa contém:
 
 ## 🧪 Scripts Disponíveis
 
+### Scripts Combinados
 - `pnpm dev` - Executa ambas as aplicações em desenvolvimento
 - `pnpm build` - Build das aplicações para produção
 - `pnpm start` - Executa as aplicações em produção
 - `pnpm lint` - Executa linting em ambas as aplicações
 - `pnpm clean` - Limpa arquivos de build
+
+### Scripts Individuais
+- `pnpm dev-api` - Executa apenas o backend em desenvolvimento
+- `pnpm dev-app` - Executa apenas o frontend em desenvolvimento
+- `pnpm build-api` - Build apenas do backend
+- `pnpm build-app` - Build apenas do frontend
+- `pnpm start-api` - Executa apenas o backend em produção
+- `pnpm start-app` - Executa apenas o frontend em produção
+- `pnpm lint-api` - Linting apenas do backend
+- `pnpm lint-app` - Linting apenas do frontend
+- `pnpm clean-api` - Limpa arquivos de build do backend
+- `pnpm clean-app` - Limpa arquivos de build do frontend
 
 ## 📝 Próximos Passos
 
