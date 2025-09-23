@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  name              String?
+  isAnonymous       Boolean  @default(true)
+  aiIntegrationType AiIntegrationType?
+  aiToken           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  taskLists TaskList[]
+
+  @@map("users")
+}
+
+model TaskList {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  iaPrompt    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks Task[]
+
+  @@map("task_lists")
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  listId      String
+  title       String
+  isCompleted Boolean  @default(false)
+  position    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  taskList TaskList @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
+
+enum AiIntegrationType {
+  huggingface
+  openrouter
+}
