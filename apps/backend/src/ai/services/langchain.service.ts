@@ -152,7 +152,9 @@ export class LangChainService {
       this.logger.error(`=== END ERROR ===`);
       
       // Enhanced error handling for task generation
-      if (error.message.includes('Modelo de IA não disponível')) {
+      if (error.message.includes('No Inference Provider available')) {
+        throw new BadRequestException(`Modelo "${config.model}" não possui provedor de inferência disponível. Verifique se o modelo está disponível no Hugging Face Hub.`);
+      } else if (error.message.includes('Modelo de IA não disponível')) {
         throw new BadRequestException('Serviço de IA temporariamente indisponível. Tente novamente em alguns minutos.');
       } else if (error.message.includes('API key inválida')) {
         throw new BadRequestException('Configuração de API inválida. Verifique suas credenciais.');
@@ -160,8 +162,11 @@ export class LangChainService {
         throw new BadRequestException('Muitas requisições. Aguarde alguns minutos antes de tentar novamente.');
       } else if (error.message.includes('Model not found')) {
         throw new BadRequestException('Modelo de IA não encontrado. Verifique a configuração do modelo.');
+      } else if (error.message.includes('InputError')) {
+        throw new BadRequestException(`Erro de entrada: ${error.message}`);
       } else {
-        throw new BadRequestException('Falha ao gerar tarefas usando IA. Tente novamente mais tarde.');
+        // Para outros erros, mostrar a mensagem real ao invés de genérica
+        throw new BadRequestException(`Falha ao gerar tarefas usando IA: ${error.message}`);
       }
     }
   }
@@ -420,7 +425,9 @@ export class LangChainService {
       // Provide more specific error messages based on the error type
       if (error.message.includes('Timeout: Request took too long')) {
         throw new BadRequestException('Timeout: A requisição demorou muito para responder. Tente novamente.');
-      } else if (error.message.includes('Modelo de IA não disponível') || error.message.includes('No Inference Provider available')) {
+      } else if (error.message.includes('No Inference Provider available')) {
+        throw new BadRequestException(`Modelo "${config.model}" não possui provedor de inferência disponível. Verifique se o modelo está disponível no Hugging Face Hub.`);
+      } else if (error.message.includes('Modelo de IA não disponível')) {
         throw new BadRequestException('Serviço de IA temporariamente indisponível. Tente novamente em alguns minutos.');
       } else if (error.message.includes('API key inválida') || error.message.includes('Invalid API key')) {
         throw new BadRequestException('Configuração de API inválida. Verifique suas credenciais.');
@@ -428,8 +435,11 @@ export class LangChainService {
         throw new BadRequestException('Muitas requisições. Aguarde alguns minutos antes de tentar novamente.');
       } else if (error.message.includes('Model not found')) {
         throw new BadRequestException('Modelo de IA não encontrado. Verifique a configuração do modelo.');
+      } else if (error.message.includes('InputError')) {
+        throw new BadRequestException(`Erro de entrada: ${error.message}`);
       } else {
-        throw new BadRequestException('Falha ao gerar texto usando IA. Tente novamente mais tarde.');
+        // Para outros erros, mostrar a mensagem real ao invés de genérica
+        throw new BadRequestException(`Falha ao gerar texto usando IA: ${error.message}`);
       }
     }
   }
@@ -585,6 +595,21 @@ Return ONLY the description, no quotes or additional text.`;
         errorMessage = 'API key é obrigatória';
       } else if (error.message.includes('Unsupported provider')) {
         errorMessage = 'Provedor não suportado';
+      } else if (error.message.includes('No Inference Provider available')) {
+        errorMessage = `Modelo "${config.model}" não possui provedor de inferência disponível. Verifique se o modelo está disponível no Hugging Face Hub.`;
+      } else if (error.message.includes('InputError')) {
+        errorMessage = `Erro de entrada: ${error.message}`;
+      } else if (error.message.includes('Serviço de IA temporariamente indisponível')) {
+        errorMessage = 'Serviço de IA temporariamente indisponível. Tente novamente em alguns minutos.';
+      } else if (error.message.includes('Timeout')) {
+        errorMessage = 'Timeout: A requisição demorou muito para responder. Tente novamente.';
+      } else if (error.message.includes('BadRequestException')) {
+        // Extrair a mensagem real do BadRequestException
+        const match = error.message.match(/BadRequestException: (.+)/);
+        errorMessage = match ? match[1] : error.message;
+      } else {
+        // Para outros erros, mostrar a mensagem real ao invés de genérica
+        errorMessage = error.message || 'Erro desconhecido ao testar API key';
       }
 
       return {
