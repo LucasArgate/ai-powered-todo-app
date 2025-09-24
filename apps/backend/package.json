@@ -24,6 +24,9 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@langchain/anthropic": "^0.3.28",
+    "@langchain/core": "^0.3.77",
+    "@langchain/openai": "^0.6.13",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
@@ -37,7 +40,8 @@
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.6",
     "swagger-ui-express": "^5.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
