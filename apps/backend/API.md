@@ -26,13 +26,10 @@ O Swagger UI oferece:
 
 ### Task Lists
 
-#### Listar todas as listas de tarefas
+#### Listar todas as listas de tarefas (com tasks incluídas)
 - **GET** `/task-lists`
 - **Headers:** `Authorization: Bearer <user-id>`
-
-#### Buscar lista por ID (com tarefas)
-- **GET** `/task-lists/:id`
-- **Headers:** `Authorization: Bearer <user-id>`
+- **Response:** Retorna todas as listas do usuário com suas tasks, contadores e informações completas
 
 #### Criar nova lista de tarefas
 - **POST** `/task-lists`
@@ -55,29 +52,9 @@ O Swagger UI oferece:
 - **DELETE** `/task-lists/:id`
 - **Headers:** `Authorization: Bearer <user-id>`
 
-#### Listar tarefas de uma lista específica
-- **GET** `/task-lists/:id/tasks`
-- **Headers:** `Authorization: Bearer <user-id>`
-
 ### Tasks
 
-#### Listar todas as tarefas do usuário
-- **GET** `/tasks`
-- **Headers:** `Authorization: Bearer <user-id>`
-- **Query Parameters:**
-  - `listId` (optional): Filtrar por lista de tarefas
-
-#### Listar tarefas concluídas
-- **GET** `/tasks/completed`
-- **Headers:** `Authorization: Bearer <user-id>`
-
-#### Listar tarefas pendentes
-- **GET** `/tasks/pending`
-- **Headers:** `Authorization: Bearer <user-id>`
-
-#### Buscar tarefa por ID
-- **GET** `/tasks/:id`
-- **Headers:** `Authorization: Bearer <user-id>`
+> **Nota:** Para listar tasks, use o endpoint `GET /task-lists` que retorna todas as listas com suas tasks incluídas. Os endpoints de listagem individual foram removidos para simplificar a API.
 
 #### Criar nova tarefa
 - **POST** `/tasks`
@@ -179,7 +156,7 @@ O Swagger UI oferece:
 
 ## Response Examples
 
-### TaskList Object
+### TaskList Object (GET /task-lists response)
 ```json
 {
   "id": "list_123",
@@ -189,7 +166,25 @@ O Swagger UI oferece:
   "tasksCount": 5,
   "completedTasksCount": 2,
   "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "tasks": [
+    {
+      "id": "task_1",
+      "title": "Pesquisar voos",
+      "isCompleted": false,
+      "position": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "task_2",
+      "title": "Reservar hotel",
+      "isCompleted": true,
+      "position": 2,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
 }
 ```
 

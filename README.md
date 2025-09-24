@@ -76,16 +76,19 @@ pnpm build-app    # Frontend apenas
 ## 🎯 Funcionalidades
 
 ### Backend (NestJS)
-- ✅ CRUD completo de tarefas
-- ✅ Integração com APIs de IA
-- ✅ Persistência com SQLite
-- ✅ Endpoint para geração automática de tarefas
+- ✅ **CRUD completo de listas de tarefas e tasks**
+- ✅ **API simplificada** - Um endpoint principal (`GET /task-lists`) retorna tudo
+- ✅ **Integração com APIs de IA** (Hugging Face/OpenRouter)
+- ✅ **Persistência com SQLite** + Prisma ORM
+- ✅ **Geração automática de listas completas** com IA
+- ✅ **Autenticação por Bearer Token**
+- ✅ **Documentação interativa** com Swagger UI
 
 ### Frontend (Next.js)
-- ✅ Interface para gerenciar tarefas
-- ✅ Formulário para criação manual de tarefas
+- ✅ Interface para gerenciar listas de tarefas
+- ✅ Formulário para criação manual de tasks
 - ✅ Funcionalidade de IA com campo de API Key
-- ✅ Atualização em tempo real da lista
+- ✅ Atualização em tempo real das listas
 
 ## 🤖 Integração com IA
 
@@ -96,10 +99,31 @@ A aplicação permite que o usuário:
 
 ## 📋 Modelo de Dados
 
-Cada tarefa contém:
+### Estrutura Hierárquica
+- **Users** → **Task Lists** → **Tasks**
+
+### Usuário (`User`)
+- `id`: ID único
+- `name`: Nome (opcional)
+- `isAnonymous`: Se é usuário anônimo
+- `aiIntegrationType`: Tipo de IA (huggingface/openrouter)
+- `aiToken`: Token da API de IA
+
+### Lista de Tarefas (`TaskList`)
+- `id`: ID único
+- `userId`: ID do usuário proprietário
+- `name`: Nome da lista
+- `description`: Descrição opcional
+- `iaPrompt`: Prompt original da IA
+- `tasksCount`: Número total de tasks
+- `completedTasksCount`: Número de tasks concluídas
+
+### Tarefa (`Task`)
+- `id`: ID único
+- `listId`: ID da lista de tarefas
 - `title`: Título da tarefa
 - `isCompleted`: Status de conclusão
-- `createdAt`: Data de criação
+- `position`: Posição na lista (ordenação)
 
 ## 🧪 Scripts Disponíveis
 

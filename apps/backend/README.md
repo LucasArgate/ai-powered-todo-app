@@ -4,30 +4,42 @@ Backend API para a aplicação de lista de tarefas com IA, construído com NestJ
 
 ## 🚀 Funcionalidades
 
-- **CRUD completo de tarefas** com validação
-- **Integração com IA** para geração automática de tarefas
-- **Banco SQLite** com criação automática de tabelas
-- **API REST** com endpoints bem estruturados
+- **CRUD completo de listas de tarefas e tasks** com validação
+- **Integração com IA** para geração automática de listas de tarefas
+- **Banco SQLite** com Prisma ORM e migrações automáticas
+- **API REST simplificada** com endpoints otimizados
+- **Autenticação por Bearer Token** (user-id)
 - **CORS configurado** para comunicação com frontend
 - **Validação de dados** com class-validator
+- **Documentação interativa** com Swagger UI
 
 ## 📋 Endpoints Disponíveis
 
-### Tarefas (`/tasks`)
+### Listas de Tarefas (`/task-lists`)
 
-- `GET /tasks` - Lista todas as tarefas
-- `GET /tasks/completed` - Lista tarefas concluídas
-- `GET /tasks/pending` - Lista tarefas pendentes
-- `GET /tasks?category=nome` - Lista tarefas por categoria
-- `GET /tasks/:id` - Busca tarefa por ID
+- `GET /task-lists` - **Lista todas as listas do usuário com tasks incluídas**
+- `POST /task-lists` - Cria nova lista de tarefas
+- `PATCH /task-lists/:id` - Atualiza lista de tarefas
+- `DELETE /task-lists/:id` - Remove lista de tarefas
+
+### Tasks (`/tasks`)
+
 - `POST /tasks` - Cria nova tarefa
 - `PATCH /tasks/:id` - Atualiza tarefa
 - `PATCH /tasks/:id/toggle` - Alterna status de conclusão
 - `DELETE /tasks/:id` - Remove tarefa
 
+### Usuários (`/users`)
+
+- `POST /users` - Cria novo usuário
+- `GET /users` - Lista todos os usuários
+- `GET /users/:id` - Busca usuário por ID
+- `PATCH /users/:id` - Atualiza usuário
+- `DELETE /users/:id` - Remove usuário
+
 ### IA (`/ai`)
 
-- `POST /ai/generate-tasks` - Gera tarefas a partir de um prompt
+- `POST /ai/generate-tasklist` - **Gera lista completa de tarefas com IA**
 - `GET /ai/providers` - Lista provedores de IA disponíveis
 
 ## 📚 Documentação da API
@@ -89,41 +101,74 @@ O backend suporta dois provedores de IA:
 
 ## 📊 Estrutura do Banco
 
-A tabela `tasks` é criada automaticamente com os campos:
+### Tabela `users`
+- `id` - ID único (CUID)
+- `name` - Nome do usuário (opcional)
+- `isAnonymous` - Se é usuário anônimo
+- `aiIntegrationType` - Tipo de integração IA (huggingface/openrouter)
+- `aiToken` - Token da API de IA
+- `createdAt` - Data de criação
+- `updatedAt` - Data de atualização
 
-- `id` - ID único (auto-incremento)
-- `title` - Título da tarefa (obrigatório)
+### Tabela `task_lists`
+- `id` - ID único (CUID)
+- `userId` - ID do usuário proprietário
+- `name` - Nome da lista (obrigatório)
 - `description` - Descrição opcional
+- `iaPrompt` - Prompt original usado pela IA
+- `createdAt` - Data de criação
+- `updatedAt` - Data de atualização
+
+### Tabela `tasks`
+- `id` - ID único (CUID)
+- `listId` - ID da lista de tarefas
+- `title` - Título da tarefa (obrigatório)
 - `isCompleted` - Status de conclusão (boolean)
-- `priority` - Prioridade (low/medium/high)
-- `category` - Categoria da tarefa
-- `dueDate` - Data de vencimento
+- `position` - Posição na lista (ordenação)
 - `createdAt` - Data de criação
 - `updatedAt` - Data de atualização
 
 ## 🔄 Exemplo de Uso
 
-### Criar tarefa manualmente
+### Listar todas as listas com tasks (endpoint principal)
 
 ```bash
-curl -X POST http://localhost:3001/tasks \
+curl -X GET http://localhost:3001/task-lists \
+  -H "Authorization: Bearer user-123"
+```
+
+### Criar nova lista de tarefas
+
+```bash
+curl -X POST http://localhost:3001/task-lists \
+  -H "Authorization: Bearer user-123" \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Comprar ingredientes",
-    "description": "Lista de ingredientes para o jantar",
-    "priority": "high",
-    "category": "Compras"
+    "name": "Viagem para o Japão",
+    "description": "Planejamento completo da viagem"
   }'
 ```
 
-### Gerar tarefas com IA
+### Criar tarefa em uma lista
 
 ```bash
-curl -X POST http://localhost:3001/ai/generate-tasks \
+curl -X POST http://localhost:3001/tasks \
+  -H "Authorization: Bearer user-123" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "listId": "list-123",
+    "title": "Pesquisar voos",
+    "position": 1
+  }'
+```
+
+### Gerar lista completa com IA
+
+```bash
+curl -X POST "http://localhost:3001/ai/generate-tasklist?userId=user-123" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "planejar uma viagem para o Japão",
-    "apiKey": "sua-api-key",
     "provider": "huggingface"
   }'
 ```
@@ -132,19 +177,33 @@ curl -X POST http://localhost:3001/ai/generate-tasks \
 
 ```text
 src/
-├── main.ts              # Ponto de entrada da aplicação
-├── app.module.ts        # Módulo principal
-├── tasks/               # Módulo de tarefas
-│   ├── entities/        # Entidades do banco
-│   ├── dto/             # DTOs de validação
-│   ├── tasks.service.ts # Lógica de negócios
-│   ├── tasks.controller.ts # Endpoints REST
-│   └── tasks.module.ts  # Configuração do módulo
-└── ai/                  # Módulo de IA
-    ├── dto/             # DTOs de IA
-    ├── ai.service.ts    # Integração com APIs de IA
-    ├── ai.controller.ts # Endpoints de IA
-    └── ai.module.ts     # Configuração do módulo
+├── main.ts                    # Ponto de entrada da aplicação
+├── app.module.ts              # Módulo principal
+├── config/                    # Configurações da aplicação
+├── database/                  # Configuração do banco (Prisma)
+├── health/                    # Health check endpoint
+├── users/                     # Módulo de usuários
+│   ├── dto/                   # DTOs de validação
+│   ├── users.service.ts       # Lógica de negócios
+│   ├── users.controller.ts     # Endpoints REST
+│   └── users.module.ts         # Configuração do módulo
+├── task-lists/                # Módulo de listas de tarefas
+│   ├── dto/                   # DTOs de validação
+│   ├── task-lists.service.ts  # Lógica de negócios
+│   ├── task-lists.controller.ts # Endpoints REST
+│   └── task-lists.module.ts   # Configuração do módulo
+├── tasks/                     # Módulo de tarefas individuais
+│   ├── dto/                   # DTOs de validação
+│   ├── tasks.service.ts       # Lógica de negócios
+│   ├── tasks.controller.ts    # Endpoints REST
+│   └── tasks.module.ts        # Configuração do módulo
+└── ai/                        # Módulo de IA
+    ├── dto/                   # DTOs de IA
+    ├── services/              # Serviços de integração IA
+    ├── parsers/               # Parsers de resposta IA
+    ├── ai.service.ts          # Lógica de negócios IA
+    ├── ai.controller.ts       # Endpoints de IA
+    └── ai.module.ts           # Configuração do módulo
 ```
 
 ## 🔒 Segurança
