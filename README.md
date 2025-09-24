@@ -1,160 +1,166 @@
 # AI-Powered Todo App
 
-Uma aplicação moderna de lista de tarefas inteligente que utiliza Inteligência Artificial para gerar automaticamente subtarefas a partir de objetivos de alto nível descritos pelo usuário.
+Uma aplicação moderna de lista de tarefas inteligente que utiliza **Inteligência Artificial** para gerar automaticamente subtarefas a partir de objetivos de alto nível descritos pelo usuário.
 
-## 🚀 Tecnologias
+## 🎯 O que esta aplicação faz?
 
-### Backend
-- **NestJS** com TypeScript
-- **SQLite** para persistência de dados
-- Integração com APIs de IA (Hugging Face/OpenRouter)
+Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pensar em todas as tarefas necessárias, você simplesmente descreve seu objetivo e a **IA gera automaticamente** uma lista completa de subtarefas acionáveis como:
 
-### Frontend
-- **Next.js** com TypeScript
-- Interface reativa e intuitiva
-- Gerenciamento de estado em tempo real
+- Pesquisar voos
+- Reservar hotel  
+- Obter visto
+- Planejar roteiro
+- Trocar moeda
+- E muito mais...
+
+## 🚀 Tecnologias Utilizadas
+
+### Por que essas tecnologias?
+
+**Backend (NestJS + TypeScript)**
+- ✅ **NestJS**: Framework robusto e escalável para APIs empresariais
+- ✅ **TypeScript**: Código mais seguro e manutenível
+- ✅ **Prisma**: ORM moderno que facilita desenvolvimento e manutenção do banco
+- ✅ **SQLite**: Banco simples e portável (conforme especificado no desafio)
+- ✅ **LangChain**: Biblioteca especializada para integração com LLMs (IA)
+- ✅ **Swagger + OpenAPI**: Documentação técnica e compatibilidade com MCP servers
+
+**Frontend (Next.js + TypeScript)**
+- ✅ **Next.js**: Framework React para interfaces modernas e rápidas
+- ✅ **TypeScript**: Consistência com o backend
+- ✅ **Interface reativa**: Atualizações em tempo real sem recarregar página
 
 ## 📁 Estrutura do Projeto
 
 ```
-/smart-todo-list
+/ai-powered-todo-app
 ├── apps/
-│   ├── backend/         # Aplicação NestJS
-│   └── frontend/        # Aplicação Next.js
+│   ├── backend/         # API NestJS (servidor)
+│   └── frontend/        # Interface Next.js (cliente)
 ├── docs/
-│   ├── desafio.md       # Especificações do desafio
+│   ├── desafio.md       # Especificações do desafio técnico
 │   └── solucao.md       # Arquitetura da solução
-├── package.json         # Gerenciador do monorepo
-└── README.md
+├── package.json         # Configuração do projeto
+└── README.md           # Este arquivo
 ```
 
-## 🛠️ Pré-requisitos
+### 📚 Documentação Técnica
 
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0
+- **[Backend README](./apps/backend/README.md)** - Documentação completa da API
+- **[API Documentation](./apps/backend/API.md)** - Especificação detalhada dos endpoints
+- **[Frontend README](./apps/frontend/README.md)** - Documentação da interface
 
-## 📦 Instalação
+## 🛠️ Como executar a aplicação
 
-1. Clone o repositório:
+### Pré-requisitos
+- **Node.js** >= 18.0.0 (ambiente de execução JavaScript)
+- **pnpm** >= 8.0.0 (gerenciador de pacotes)
+
+### Instalação rápida
+
+1. **Clone o repositório:**
 ```bash
 git clone <repository-url>
 cd ai-powered-todo-app
 ```
 
-2. Instale as dependências:
+2. **Instale as dependências:**
 ```bash
 pnpm install
 ```
 
-## 🚀 Como executar
-
-### Desenvolvimento
-Para executar ambas as aplicações em modo de desenvolvimento:
+3. **Execute a aplicação completa:**
 ```bash
 pnpm dev
 ```
 
-### Executar aplicações individualmente
-```bash
-# Backend apenas
-pnpm dev-api
+### Acessando a aplicação
 
-# Frontend apenas
-pnpm dev-app
+Após executar `pnpm dev`, acesse:
+
+- **Interface do usuário**: [http://localhost:3000](http://localhost:3000)
+- **API Backend**: [http://localhost:3001](http://localhost:3001)
+- **Documentação da API**: [http://localhost:3001/api](http://localhost:3001/api)
+
+### Scripts disponíveis
+
+```bash
+# Desenvolvimento
+pnpm dev          # Executa frontend + backend
+pnpm dev-api      # Apenas backend
+pnpm dev-app      # Apenas frontend
+
+# Produção
+pnpm build        # Build completo
+pnpm start        # Executa em produção
 ```
 
-### Build para produção
-```bash
-# Build de ambas as aplicações
-pnpm build
+## ✨ Funcionalidades Principais
 
-# Build individual
-pnpm build-api    # Backend apenas
-pnpm build-app    # Frontend apenas
+### Para o Usuário Final
+- 🎯 **Criação inteligente de listas** - Descreva um objetivo e receba tarefas automáticas
+- 📝 **Gerenciamento manual** - Crie, edite e organize tarefas manualmente
+- ✅ **Controle de progresso** - Marque tarefas como concluídas
+- 🔄 **Atualizações em tempo real** - Interface sempre sincronizada
+- 🔑 **Integração com IA** - Use sua própria API Key (Hugging Face/OpenRouter)
+
+### Para Desenvolvedores
+- 🚀 **API REST completa** - Endpoints bem documentados e testáveis
+- 📚 **Documentação interativa** - Swagger UI + OpenAPI JSON
+- 🔒 **Autenticação segura** - Bearer Token para controle de acesso
+- 🗄️ **Banco de dados robusto** - SQLite com Prisma ORM
+- 🤖 **Integração IA avançada** - LangChain para múltiplos provedores
+
+## 🤖 Como funciona a IA?
+
+### Processo simples em 3 passos:
+
+1. **Configure sua API Key** - Use sua própria chave do Hugging Face ou OpenRouter
+2. **Descreva seu objetivo** - Ex: "planejar uma viagem para o Japão"
+3. **Receba tarefas automáticas** - A IA gera uma lista completa de subtarefas
+
+### Provedores de IA suportados:
+- **Hugging Face** - Opção gratuita para testes
+- **OpenRouter** - Acesso a múltiplos modelos LLM (GPT, Claude, etc.)
+
+## 📊 Como os dados são organizados
+
+### Estrutura simples e intuitiva:
+```
+Usuário
+  └── Lista de Tarefas (ex: "Viagem para o Japão")
+      ├── Tarefa 1: "Pesquisar voos"
+      ├── Tarefa 2: "Reservar hotel"
+      └── Tarefa 3: "Obter visto"
 ```
 
-## 🎯 Funcionalidades
+### Informações armazenadas:
+- **Usuário**: Nome, configurações de IA, API Keys
+- **Lista**: Nome, descrição, prompt original da IA, contadores
+- **Tarefa**: Título, status de conclusão, posição na lista
 
-### Backend (NestJS)
-- ✅ **CRUD completo de listas de tarefas e tasks**
-- ✅ **API simplificada** - Um endpoint principal (`GET /task-lists`) retorna tudo
-- ✅ **Integração com APIs de IA** (Hugging Face/OpenRouter)
-- ✅ **Persistência com SQLite** + Prisma ORM (conforme especificado no desafio)
-- ✅ **Geração automática de listas completas** com IA
-- ✅ **Autenticação por Bearer Token**
-- ✅ **Documentação interativa** com Swagger UI + OpenAPI JSON (compatível com MCP servers)
+## 📝 Status do Projeto
 
-### Frontend (Next.js)
-- ✅ Interface para gerenciar listas de tarefas
-- ✅ Formulário para criação manual de tasks
-- ✅ Funcionalidade de IA com campo de API Key
-- ✅ Atualização em tempo real das listas
+### ✅ Concluído
+- ~~Configurar o backend NestJS~~ ✅ **Concluído**
+- ~~Implementar a API de tarefas~~ ✅ **Concluído**
+- ~~Integrar com provedores de IA~~ ✅ **Concluído**
+- ~~Documentação técnica completa~~ ✅ **Concluído**
 
-## 🤖 Integração com IA
+### 🚧 Em desenvolvimento
+- Desenvolver a interface Next.js
+- Conectar frontend com backend
+- Testes de integração
 
-A aplicação permite que o usuário:
-1. Insira sua API Key do provedor de IA (Hugging Face/OpenRouter)
-2. Descreva um objetivo de alto nível (ex: "planejar uma viagem")
-3. Receba automaticamente uma lista de subtarefas acionáveis
+### 📋 Próximos passos
+- Implementar interface de usuário moderna
+- Adicionar testes automatizados
+- Deploy em ambiente de produção
+- Otimizações de performance
 
-## 📋 Modelo de Dados
+## 📄 Documentação Técnica
 
-### Estrutura Hierárquica
-- **Users** → **Task Lists** → **Tasks**
-
-### Usuário (`User`)
-- `id`: ID único
-- `name`: Nome (opcional)
-- `isAnonymous`: Se é usuário anônimo
-- `aiIntegrationType`: Tipo de IA (huggingface/openrouter)
-- `aiToken`: Token da API de IA
-
-### Lista de Tarefas (`TaskList`)
-- `id`: ID único
-- `userId`: ID do usuário proprietário
-- `name`: Nome da lista
-- `description`: Descrição opcional
-- `iaPrompt`: Prompt original da IA
-- `tasksCount`: Número total de tasks
-- `completedTasksCount`: Número de tasks concluídas
-
-### Tarefa (`Task`)
-- `id`: ID único
-- `listId`: ID da lista de tarefas
-- `title`: Título da tarefa
-- `isCompleted`: Status de conclusão
-- `position`: Posição na lista (ordenação)
-
-## 🧪 Scripts Disponíveis
-
-### Scripts Combinados
-- `pnpm dev` - Executa ambas as aplicações em desenvolvimento
-- `pnpm build` - Build das aplicações para produção
-- `pnpm start` - Executa as aplicações em produção
-- `pnpm lint` - Executa linting em ambas as aplicações
-- `pnpm clean` - Limpa arquivos de build
-
-### Scripts Individuais
-- `pnpm dev-api` - Executa apenas o backend em desenvolvimento
-- `pnpm dev-app` - Executa apenas o frontend em desenvolvimento
-- `pnpm build-api` - Build apenas do backend
-- `pnpm build-app` - Build apenas do frontend
-- `pnpm start-api` - Executa apenas o backend em produção
-- `pnpm start-app` - Executa apenas o frontend em produção
-- `pnpm lint-api` - Linting apenas do backend
-- `pnpm lint-app` - Linting apenas do frontend
-- `pnpm clean-api` - Limpa arquivos de build do backend
-- `pnpm clean-app` - Limpa arquivos de build do frontend
-
-## 📝 Próximos Passos
-
-1. Configurar o backend NestJS
-2. Implementar a API de tarefas
-3. Integrar com provedores de IA
-4. Desenvolver a interface Next.js
-5. Conectar frontend com backend
-
-## 📄 Documentação
-
-- [Desafio](./docs/desafio.md) - Especificações completas do teste técnico
-- [Solução](./docs/solucao.md) - Arquitetura e abordagem da solução
+- **[Desafio](./docs/desafio.md)** - Especificações completas do teste técnico
+- **[Solução](./docs/solucao.md)** - Arquitetura e abordagem da solução
+- **[Backend API](./apps/backend/API.md)** - Documentação completa da API
+- **[Backend README](./apps/backend/README.md)** - Guia técnico do backend
