@@ -164,3 +164,4 @@ Usuário
 - **[Solução](./docs/solucao.md)** - Arquitetura e abordagem da solução
 - **[Backend API](./apps/backend/API.md)** - Documentação completa da API
 - **[Backend README](./apps/backend/README.md)** - Guia técnico do backend
+- **[TDD Strategy](./docs/tdd-strategy.md)** - Estratégia TDD e CI/CD documentada (posterior ao front)
