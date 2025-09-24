@@ -200,6 +200,38 @@ Return ONLY the JSON array of tasks as specified in the format instructions.`;
   }
 
   /**
+   * Gera texto simples a partir de um prompt
+   */
+  async generateText(prompt: string, config: LLMConfig): Promise<string> {
+    try {
+      // For now, we'll use a fallback approach since the LangChain types are complex
+      // This will be improved in future iterations
+      const model = this.createLLMModel(config);
+      
+      // Create a simple prompt template
+      const textPrompt = PromptTemplate.fromTemplate(`{prompt}`);
+      
+      // Execute the chain manually to avoid type issues
+      const formattedPrompt = await textPrompt.format({ prompt });
+      const response = await (model as any).invoke(formattedPrompt);
+      
+      // Extract text from response
+      if (typeof response === 'string') {
+        return response;
+      } else if (response && typeof response.content === 'string') {
+        return response.content;
+      } else if (response && typeof response === 'object' && 'content' in response) {
+        return (response as any).content;
+      } else {
+        return JSON.stringify(response);
+      }
+    } catch (error) {
+      this.logger.error('Error generating text:', error);
+      throw new BadRequestException('Failed to generate text from AI service');
+    }
+  }
+
+  /**
    * Valida a configuração do provedor
    */
   validateConfig(config: LLMConfig): boolean {

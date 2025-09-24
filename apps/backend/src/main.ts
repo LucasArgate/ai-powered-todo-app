@@ -28,6 +28,7 @@ async function bootstrap() {
     .setDescription('API para aplicação de lista de tarefas com integração de IA')
     .setVersion('1.0')
     .addTag('tasks', 'Operações relacionadas às tarefas')
+    .addTag('users', 'Operações relacionadas aos usuários')
     .addTag('ai', 'Integração com serviços de IA')
     .addTag('health', 'Monitoramento da aplicação')
     .addBearerAuth()

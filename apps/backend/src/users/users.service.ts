@@ -1,20 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { User } from '@prisma/client';
-
-export interface CreateUserDto {
-  name?: string;
-  isAnonymous?: boolean;
-  aiIntegrationType?: 'huggingface' | 'openrouter';
-  aiToken?: string;
-}
-
-export interface UpdateUserDto {
-  name?: string;
-  isAnonymous?: boolean;
-  aiIntegrationType?: 'huggingface' | 'openrouter';
-  aiToken?: string;
-}
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -52,9 +39,34 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.findOne(id); // Check if user exists
     
+    // Prepare update data
+    const updateData: any = {};
+    
+    // Update name if provided
+    if (updateUserDto.name !== undefined) {
+      updateData.name = updateUserDto.name;
+      // Set isAnonymous based on name: if name is provided and not empty, user is not anonymous
+      updateData.isAnonymous = !updateUserDto.name || updateUserDto.name.trim() === '';
+    }
+    
+    // Update aiIntegrationType if provided
+    if (updateUserDto.aiIntegrationType !== undefined) {
+      updateData.aiIntegrationType = updateUserDto.aiIntegrationType;
+    }
+    
+    // Update aiToken if provided
+    if (updateUserDto.aiToken !== undefined) {
+      updateData.aiToken = updateUserDto.aiToken;
+    }
+    
+    // If isAnonymous is explicitly provided, use that value
+    if (updateUserDto.isAnonymous !== undefined) {
+      updateData.isAnonymous = updateUserDto.isAnonymous;
+    }
+    
     return await this.prisma.user.update({
       where: { id },
-      data: updateUserDto,
+      data: updateData,
     });
   }
 

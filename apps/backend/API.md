@@ -24,55 +24,153 @@ O Swagger UI oferece:
 ### Health Check
 - **GET** `/health` - Verifica status da aplicação
 
-### Tasks
+### Task Lists
 
-#### Listar todas as tarefas
-- **GET** `/tasks`
-- **Query Parameters:**
-  - `category` (optional): Filtrar por categoria
+#### Listar todas as listas de tarefas
+- **GET** `/task-lists`
+- **Headers:** `Authorization: Bearer <user-id>`
 
-#### Listar tarefas concluídas
-- **GET** `/tasks/completed`
+#### Buscar lista por ID (com tarefas)
+- **GET** `/task-lists/:id`
+- **Headers:** `Authorization: Bearer <user-id>`
 
-#### Listar tarefas pendentes
-- **GET** `/tasks/pending`
-
-#### Buscar tarefa por ID
-- **GET** `/tasks/:id`
-
-#### Criar nova tarefa
-- **POST** `/tasks`
+#### Criar nova lista de tarefas
+- **POST** `/task-lists`
+- **Headers:** `Authorization: Bearer <user-id>`
 - **Body:**
 ```json
 {
-  "title": "Título da tarefa",
+  "name": "Nome da lista",
   "description": "Descrição opcional",
-  "priority": "low|medium|high",
-  "category": "Categoria opcional",
-  "dueDate": "2024-01-01T00:00:00.000Z"
+  "iaPrompt": "Prompt original (se gerado por IA)"
+}
+```
+
+#### Atualizar lista de tarefas
+- **PATCH** `/task-lists/:id`
+- **Headers:** `Authorization: Bearer <user-id>`
+- **Body:** (mesmo formato do POST, todos os campos opcionais)
+
+#### Deletar lista de tarefas
+- **DELETE** `/task-lists/:id`
+- **Headers:** `Authorization: Bearer <user-id>`
+
+#### Listar tarefas de uma lista específica
+- **GET** `/task-lists/:id/tasks`
+- **Headers:** `Authorization: Bearer <user-id>`
+
+### Tasks
+
+#### Listar todas as tarefas do usuário
+- **GET** `/tasks`
+- **Headers:** `Authorization: Bearer <user-id>`
+- **Query Parameters:**
+  - `listId` (optional): Filtrar por lista de tarefas
+
+#### Listar tarefas concluídas
+- **GET** `/tasks/completed`
+- **Headers:** `Authorization: Bearer <user-id>`
+
+#### Listar tarefas pendentes
+- **GET** `/tasks/pending`
+- **Headers:** `Authorization: Bearer <user-id>`
+
+#### Buscar tarefa por ID
+- **GET** `/tasks/:id`
+- **Headers:** `Authorization: Bearer <user-id>`
+
+#### Criar nova tarefa
+- **POST** `/tasks`
+- **Headers:** `Authorization: Bearer <user-id>`
+- **Body:**
+```json
+{
+  "listId": "ID da lista de tarefas",
+  "title": "Título da tarefa",
+  "position": 1,
+  "isCompleted": false
 }
 ```
 
 #### Atualizar tarefa
 - **PATCH** `/tasks/:id`
-- **Body:** (mesmo formato do POST, todos os campos opcionais)
+- **Headers:** `Authorization: Bearer <user-id>`
+- **Body:** (todos os campos opcionais)
 
 #### Alternar status de conclusão
 - **PATCH** `/tasks/:id/toggle`
+- **Headers:** `Authorization: Bearer <user-id>`
 
 #### Deletar tarefa
 - **DELETE** `/tasks/:id`
+- **Headers:** `Authorization: Bearer <user-id>`
+
+### Users
+
+#### Criar usuário
+- **POST** `/users`
+- **Body:**
+```json
+{
+  "name": "Nome do usuário (opcional)",
+  "isAnonymous": true,
+  "aiIntegrationType": "huggingface|openrouter",
+  "aiToken": "token-da-api"
+}
+```
+
+#### Listar todos os usuários
+- **GET** `/users`
+
+#### Listar usuários anônimos
+- **GET** `/users/anonymous`
+
+#### Listar usuários registrados
+- **GET** `/users/registered`
+
+#### Buscar usuário por ID
+- **GET** `/users/:id`
+
+#### Atualizar usuário
+- **PATCH** `/users/:id`
+- **Body:** (todos os campos opcionais)
+```json
+{
+  "name": "Novo nome",
+  "aiIntegrationType": "openrouter",
+  "aiToken": "novo-token"
+}
+```
+**Nota:** Se `name` for fornecido e não estiver vazio, `isAnonymous` será automaticamente definido como `false`. Se `name` estiver vazio ou não for fornecido, `isAnonymous` será `true`.
+
+#### Deletar usuário
+- **DELETE** `/users/:id`
 
 ### AI Integration
 
-#### Gerar tarefas com IA
-- **POST** `/ai/generate-tasks`
+#### Gerar tarefas com IA (método antigo)
+- **POST** `/ai/generate-tasks?userId=<user-id>`
 - **Body:**
 ```json
 {
   "prompt": "planejar uma viagem para o Japão",
-  "apiKey": "sua-api-key-aqui",
-  "provider": "huggingface|openrouter"
+  "provider": "huggingface|openrouter",
+  "model": "gpt-3.5-turbo",
+  "temperature": 0.7,
+  "maxTokens": 1000
+}
+```
+
+#### Gerar lista de tarefas completa com IA (RECOMENDADO)
+- **POST** `/ai/generate-tasklist?userId=<user-id>`
+- **Body:**
+```json
+{
+  "prompt": "planejar uma viagem para o Japão",
+  "provider": "huggingface|openrouter",
+  "model": "gpt-3.5-turbo",
+  "temperature": 0.7,
+  "maxTokens": 1000
 }
 ```
 
@@ -81,16 +179,73 @@ O Swagger UI oferece:
 
 ## Response Examples
 
+### TaskList Object
+```json
+{
+  "id": "list_123",
+  "name": "Viagem para o Japão",
+  "description": "Planejamento completo para uma viagem ao Japão",
+  "iaPrompt": "planejar viagem para Japão",
+  "tasksCount": 5,
+  "completedTasksCount": 2,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
 ### Task Object
 ```json
 {
-  "id": 1,
-  "title": "Comprar ingredientes",
-  "description": "Lista de ingredientes para o jantar",
+  "id": "task_123",
+  "title": "Pesquisar voos",
   "isCompleted": false,
-  "priority": "high",
-  "category": "Compras",
-  "dueDate": "2024-01-01T00:00:00.000Z",
+  "position": 1,
+  "listId": "list_123",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### TaskList with Tasks (AI Generated)
+```json
+{
+  "id": "list_123",
+  "name": "Viagem para o Japão",
+  "description": "Planejamento completo para uma viagem ao Japão",
+  "iaPrompt": "planejar viagem para Japão",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "tasks": [
+    {
+      "id": "task_1",
+      "title": "Pesquisar voos",
+      "isCompleted": false,
+      "position": 1,
+      "listId": "list_123",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "task_2",
+      "title": "Reservar hotel",
+      "isCompleted": false,
+      "position": 2,
+      "listId": "list_123",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+### User Object
+```json
+{
+  "id": "clx1234567890",
+  "name": "João Silva",
+  "isAnonymous": false,
+  "aiIntegrationType": "openrouter",
+  "aiToken": "sk-or-v1-abc123...",
   "createdAt": "2024-01-01T00:00:00.000Z",
   "updatedAt": "2024-01-01T00:00:00.000Z"
 }

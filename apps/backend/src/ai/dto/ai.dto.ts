@@ -11,13 +11,6 @@ export class GenerateTasksDto {
   @IsNotEmpty()
   prompt: string;
 
-  @ApiPropertyOptional({
-    description: 'API Key do provedor de IA (opcional se configurado no .env)',
-    example: 'hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-  })
-  @IsOptional()
-  @IsString()
-  apiKey?: string;
 
   @ApiPropertyOptional({
     description: 'Provedor de IA a ser utilizado (apenas gratuitos)',
@@ -65,14 +58,6 @@ export class GenerateTasksDto {
 }
 
 export class AiConfigDto {
-  @ApiProperty({
-    description: 'API Key do provedor de IA',
-    example: 'hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-  })
-  @IsString()
-  @IsNotEmpty()
-  apiKey: string;
-
   @ApiProperty({
     description: 'Provedor de IA (apenas gratuitos)',
     enum: ['huggingface', 'openrouter'],
