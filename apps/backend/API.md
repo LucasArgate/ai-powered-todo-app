@@ -133,31 +133,37 @@ Para uma experiência completa de documentação e teste da API, acesse:
 
 ### AI Integration
 
-#### Gerar tarefas com IA (método antigo)
-- **POST** `/ai/generate-tasks?userId=<user-id>`
+#### Gerar tarefas com IA
+- **POST** `/ai/generate-tasks`
+- **Headers:** `Authorization: Bearer <user-id>`
 - **Body:**
 ```json
 {
   "prompt": "planejar uma viagem para o Japão",
+  "listName": "Viagem para o Japão",
   "provider": "huggingface|openrouter",
   "model": "gpt-3.5-turbo",
   "temperature": 0.7,
   "maxTokens": 1000
 }
 ```
+**Nota:** Se `listName` for fornecido, cria uma nova TaskList com esse nome. Caso contrário, salva as tarefas em uma lista padrão.
 
 #### Gerar lista de tarefas completa com IA (RECOMENDADO)
-- **POST** `/ai/generate-tasklist?userId=<user-id>`
+- **POST** `/ai/generate-tasklist`
+- **Headers:** `Authorization: Bearer <user-id>`
 - **Body:**
 ```json
 {
   "prompt": "planejar uma viagem para o Japão",
+  "listName": "Viagem para o Japão",
   "provider": "huggingface|openrouter",
   "model": "gpt-3.5-turbo",
   "temperature": 0.7,
   "maxTokens": 1000
 }
 ```
+**Nota:** Se `listName` for fornecido, usa esse nome para a lista. Caso contrário, gera automaticamente um título usando IA.
 
 #### Listar provedores disponíveis
 - **GET** `/ai/providers`

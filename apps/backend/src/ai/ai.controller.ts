@@ -1,23 +1,22 @@
-import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { Controller, Post, Body, Get, Query, Param, BadRequestException, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
 import { AiService } from './ai.service';
-import { GenerateTasksDto } from './dto/ai.dto';
+import { GenerateTasksDto, TestApiKeyDto, TestUserApiKeyDto } from './dto/ai.dto';
+import { BaseController } from '../common/base.controller';
 
 @ApiTags('ai')
+@ApiBearerAuth()
 @Controller('ai')
-export class AiController {
-  constructor(private readonly aiService: AiService) {}
+export class AiController extends BaseController {
+  constructor(private readonly aiService: AiService) {
+    super();
+  }
 
   @Post('generate-tasks')
   @ApiOperation({ 
     summary: 'Gerar tarefas usando IA',
-    description: 'Gera uma lista de tarefas baseada em um prompt usando serviços de IA como Hugging Face ou OpenRouter. Usa a API key configurada no perfil do usuário.'
-  })
-  @ApiQuery({
-    name: 'userId',
-    description: 'ID do usuário que possui a API key configurada',
-    required: true,
-    example: 'user_123'
+    description: 'Gera uma lista de tarefas baseada em um prompt usando serviços de IA como Hugging Face ou OpenRouter. Se um listName for fornecido, cria uma nova TaskList com esse nome. Usa a API key configurada no perfil do usuário.'
   })
   @ApiResponse({ 
     status: 201, 
@@ -40,24 +39,20 @@ export class AiController {
     }
   })
   @ApiResponse({ status: 400, description: 'Erro na requisição ou falha na API de IA' })
+  @ApiResponse({ status: 401, description: 'Token de autorização inválido' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado ou sem API key configurada' })
   async generateTasks(
-    @Query('userId') userId: string,
+    @Req() request: any,
     @Body() generateTasksDto: GenerateTasksDto
   ) {
+    const userId = this.extractUserIdFromAuthHeader(request);
     return await this.aiService.generateTasksFromPrompt(userId, generateTasksDto);
   }
 
   @Post('generate-tasklist')
   @ApiOperation({ 
     summary: 'Gerar lista de tarefas completa usando IA',
-    description: 'Gera uma lista de tarefas completa (com título, descrição e tasks) baseada em um prompt usando serviços de IA. Cria uma TaskList com todas as tasks organizadas.'
-  })
-  @ApiQuery({
-    name: 'userId',
-    description: 'ID do usuário que possui a API key configurada',
-    required: true,
-    example: 'user_123'
+    description: 'Gera uma lista de tarefas completa (com título, descrição e tasks) baseada em um prompt usando serviços de IA. Se um listName for fornecido, usa esse nome; caso contrário, gera automaticamente um título usando IA. Cria uma TaskList com todas as tasks organizadas.'
   })
   @ApiResponse({ 
     status: 201, 
@@ -90,11 +85,13 @@ export class AiController {
     }
   })
   @ApiResponse({ status: 400, description: 'Erro na requisição ou falha na API de IA' })
+  @ApiResponse({ status: 401, description: 'Token de autorização inválido' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado ou sem API key configurada' })
   async generateTaskList(
-    @Query('userId') userId: string,
+    @Req() request: any,
     @Body() generateTasksDto: GenerateTasksDto
   ) {
+    const userId = this.extractUserIdFromAuthHeader(request);
     return await this.aiService.generateTaskListFromPrompt(userId, generateTasksDto);
   }
 
@@ -120,5 +117,67 @@ export class AiController {
   })
   async getProviders() {
     return await this.aiService.getAvailableProviders();
+  }
+
+  @Post('test-api-key')
+  @ApiOperation({ 
+    summary: 'Testar API key do usuário logado',
+    description: 'Testa se a API key configurada no perfil do usuário logado está funcionando corretamente com o provedor especificado. Usa o aiToken salvo no banco de dados do usuário.'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Resultado do teste da API key do usuário',
+    schema: {
+      type: 'object',
+      properties: {
+        valid: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'API key está funcionando corretamente' },
+        provider: { type: 'string', example: 'huggingface' },
+        model: { type: 'string', example: 'gpt-3.5-turbo' }
+      }
+    }
+  })
+  @ApiResponse({ status: 400, description: 'Erro na requisição ou API key inválida' })
+  @ApiResponse({ status: 401, description: 'Token de autorização inválido' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado ou sem API key configurada' })
+  async testApiKey(
+    @Req() request: any,
+    @Body() testUserApiKeyDto: TestUserApiKeyDto
+  ) {
+    const userId = this.extractUserIdFromAuthHeader(request);
+    return await this.aiService.testUserApiKey(
+      userId,
+      testUserApiKeyDto.provider,
+      testUserApiKeyDto.model
+    );
+  }
+
+  @Post('debug-generate')
+  @ApiOperation({ 
+    summary: 'Debug - Gerar texto simples para teste',
+    description: 'Endpoint para debug que gera texto simples usando IA para testar a conectividade e resposta'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Texto gerado pela IA',
+    schema: {
+      type: 'object',
+      properties: {
+        text: { type: 'string', example: 'Resposta da IA' },
+        provider: { type: 'string', example: 'huggingface' },
+        model: { type: 'string', example: 'gpt2' }
+      }
+    }
+  })
+  async debugGenerate(
+    @Req() request: any,
+    @Body() body: { prompt?: string; provider?: string; model?: string }
+  ) {
+    const userId = this.extractUserIdFromAuthHeader(request);
+    const prompt = body.prompt || 'Hello, how are you?';
+    const provider = body.provider || 'huggingface';
+    const model = body.model;
+    
+    return await this.aiService.debugGenerateText(userId, prompt, provider, model);
   }
 }

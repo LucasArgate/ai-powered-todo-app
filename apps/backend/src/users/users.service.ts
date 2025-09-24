@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { User } from '@prisma/client';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { ConfigureAiIntegrationDto } from './dto/ai-integration.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +15,7 @@ export class UsersService {
         isAnonymous: createUserDto.isAnonymous ?? true,
         aiIntegrationType: createUserDto.aiIntegrationType,
         aiToken: createUserDto.aiToken,
+        aiModel: createUserDto.aiModel,
       },
     });
   }
@@ -59,6 +61,11 @@ export class UsersService {
       updateData.aiToken = updateUserDto.aiToken;
     }
     
+    // Update aiModel if provided
+    if (updateUserDto.aiModel !== undefined) {
+      updateData.aiModel = updateUserDto.aiModel;
+    }
+    
     // If isAnonymous is explicitly provided, use that value
     if (updateUserDto.isAnonymous !== undefined) {
       updateData.isAnonymous = updateUserDto.isAnonymous;
@@ -89,6 +96,19 @@ export class UsersService {
     return await this.prisma.user.findMany({
       where: { isAnonymous: false },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async configureAiIntegration(id: string, configureAiDto: ConfigureAiIntegrationDto): Promise<User> {
+    await this.findOne(id); // Check if user exists
+    
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        aiIntegrationType: configureAiDto.aiIntegrationType,
+        aiToken: configureAiDto.aiToken,
+        aiModel: configureAiDto.aiModel,
+      },
     });
   }
 }

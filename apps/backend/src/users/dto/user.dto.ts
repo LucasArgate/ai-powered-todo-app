@@ -44,6 +44,15 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   aiToken?: string;
+
+  @ApiProperty({
+    description: 'AI model to use with the integration',
+    example: 'gpt2',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  aiModel?: string;
 }
 
 export class UpdateUserDto {
@@ -83,4 +92,13 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   aiToken?: string;
+
+  @ApiProperty({
+    description: 'AI model to use with the integration',
+    example: 'gpt2',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  aiModel?: string;
 }

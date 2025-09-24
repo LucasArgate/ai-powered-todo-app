@@ -146,6 +146,16 @@ class ApiClient {
       headers: this.getHeaders(),
     });
   }
+
+  // AI endpoints
+  async testApiKey(apiKey: string, provider: 'huggingface' | 'openrouter', model?: string): Promise<any> {
+    const response = await this.client.post('/ai-public/test-api-key', {
+      apiKey,
+      provider,
+      model,
+    });
+    return response.data;
+  }
 }
 
 // Export singleton instance

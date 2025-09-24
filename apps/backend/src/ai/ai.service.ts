@@ -20,7 +20,7 @@ export class AiService {
   ) {}
 
   async generateTasksFromPrompt(userId: string, dto: GenerateTasksDto): Promise<any[]> {
-    const { prompt, provider = 'huggingface' } = dto;
+    const { prompt, listName, provider = 'huggingface' } = dto;
     
     try {
       // Buscar dados do usuário (incluindo API key)
@@ -43,12 +43,24 @@ export class AiService {
       const config = {
         provider: llmProvider,
         apiKey: user.aiToken,
-        model: dto.model,
+        model: (user as any).aiModel || dto.model, // Priorizar modelo do usuário
         temperature: dto.temperature,
         maxTokens: dto.maxTokens,
       };
       
       this.langChainService.validateConfig(config);
+      
+      // Criar TaskList se listName foi fornecido
+      let taskListId = 'default-list';
+      if (listName) {
+        const taskList = await this.taskListsService.create({
+          userId,
+          name: listName,
+          description: `Lista de tarefas gerada para: ${prompt}`,
+          iaPrompt: prompt
+        });
+        taskListId = taskList.id;
+      }
       
       // Gerar tarefas usando LangChain
       const tasks = await this.langChainService.generateTasks(prompt, config);
@@ -58,14 +70,14 @@ export class AiService {
       for (let i = 0; i < tasks.length; i++) {
         const taskData = tasks[i];
         const task = await this.tasksService.create({
-          listId: 'default-list', // TODO: Implement proper list management
+          listId: taskListId,
           title: taskData.title,
           position: i,
         }, userId);
         savedTasks.push(task);
       }
 
-      this.logger.log(`Generated ${savedTasks.length} tasks from prompt: "${prompt}" for user ${userId}`);
+      this.logger.log(`Generated ${savedTasks.length} tasks from prompt: "${prompt}" for user ${userId}${listName ? ` in list "${listName}"` : ''}`);
       return savedTasks;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -90,7 +102,7 @@ export class AiService {
 
 
   async generateTaskListFromPrompt(userId: string, dto: GenerateTasksDto): Promise<TaskListWithTasksAndCounts> {
-    const { prompt, provider = 'huggingface' } = dto;
+    const { prompt, listName, provider = 'huggingface' } = dto;
     
     try {
       // Buscar dados do usuário (incluindo API key)
@@ -113,15 +125,15 @@ export class AiService {
       const config = {
         provider: llmProvider,
         apiKey: user.aiToken,
-        model: dto.model,
+        model: (user as any).aiModel || dto.model, // Priorizar modelo do usuário
         temperature: dto.temperature,
         maxTokens: dto.maxTokens,
       };
       
       this.langChainService.validateConfig(config);
       
-      // Gerar título e descrição da lista usando IA
-      const listTitle = await this.generateListTitle(prompt, config);
+      // Usar listName fornecido ou gerar título e descrição da lista usando IA
+      const listTitle = listName || await this.generateListTitle(prompt, config);
       const listDescription = await this.generateListDescription(prompt, config);
       
       // Criar a TaskList
@@ -163,30 +175,163 @@ export class AiService {
   }
 
   private async generateListTitle(prompt: string, config: any): Promise<string> {
-    const titlePrompt = `Based on this goal: "${prompt}", generate a concise and descriptive title for a task list (maximum 50 characters). Return only the title, no quotes or extra text.`;
-    
     try {
-      const response = await this.langChainService.generateText(titlePrompt, config);
-      return response.trim().replace(/['"]/g, ''); // Remove quotes if present
+      return await this.langChainService.generateListTitle(prompt, config);
     } catch (error) {
       this.logger.warn('Failed to generate list title, using fallback');
-      return `Tasks for: ${prompt.substring(0, 40)}${prompt.length > 40 ? '...' : ''}`;
+      return `Tarefas: ${prompt.substring(0, 40)}${prompt.length > 40 ? '...' : ''}`;
     }
   }
 
   private async generateListDescription(prompt: string, config: any): Promise<string> {
-    const descriptionPrompt = `Based on this goal: "${prompt}", generate a brief description for a task list (maximum 100 characters). Return only the description, no quotes or extra text.`;
-    
     try {
-      const response = await this.langChainService.generateText(descriptionPrompt, config);
-      return response.trim().replace(/['"]/g, ''); // Remove quotes if present
+      return await this.langChainService.generateListDescription(prompt, config);
     } catch (error) {
       this.logger.warn('Failed to generate list description, using fallback');
-      return `Task list generated from: ${prompt}`;
+      return `Lista de tarefas gerada para: ${prompt}`;
     }
   }
 
   async getAvailableProviders(): Promise<{ name: string; description: string; free: boolean }[]> {
     return this.langChainService.getAvailableProviders();
+  }
+
+  /**
+   * Testa se a API key do usuário logado está funcionando corretamente
+   */
+  async testUserApiKey(userId: string, provider: string, model?: string): Promise<{ valid: boolean; message: string; provider: string; model?: string }> {
+    try {
+      this.logger.log(`Testing user API key for provider: ${provider}, userId: ${userId}`);
+      
+      // Buscar dados do usuário (incluindo API key)
+      const user = await this.usersService.findOne(userId);
+      
+      // Verificar se o usuário tem API key configurada
+      if (!user.aiToken) {
+        return {
+          valid: false,
+          message: 'Usuário não possui API key configurada. Configure sua integração de IA primeiro.',
+          provider: provider,
+          model: model,
+        };
+      }
+      
+      // Mapear provider para LLMProvider
+      const llmProvider = this.mapProvider(provider);
+      
+      // Criar configuração de teste - usar modelo do usuário se disponível
+      const config = {
+        provider: llmProvider,
+        apiKey: user.aiToken,
+        model: (user as any).aiModel || model, // Priorizar modelo do usuário
+        temperature: 0.1,
+        maxTokens: 50,
+      };
+      
+      // Testar usando LangChainService
+      const result = await this.langChainService.testApiKey(config);
+      
+      this.logger.log(`User API key test completed for ${provider}: ${result.valid ? 'SUCCESS' : 'FAILED'}`);
+      return result;
+    } catch (error) {
+      this.logger.error('Error testing user API key:', error.message);
+      
+      // Retornar erro genérico se algo der errado
+      return {
+        valid: false,
+        message: 'Erro interno ao testar API key do usuário',
+        provider: provider,
+        model: model,
+      };
+    }
+  }
+
+  /**
+   * Testa se uma API key está funcionando corretamente (método público)
+   */
+  async testApiKey(apiKey: string, provider: string, model?: string): Promise<{ valid: boolean; message: string; provider: string; model?: string }> {
+    try {
+      this.logger.log(`Testing API key for provider: ${provider}`);
+      
+      // Mapear provider para LLMProvider
+      const llmProvider = this.mapProvider(provider);
+      
+      // Criar configuração de teste
+      const config = {
+        provider: llmProvider,
+        apiKey: apiKey,
+        model: model,
+        temperature: 0.1,
+        maxTokens: 50,
+      };
+      
+      // Testar usando LangChainService
+      const result = await this.langChainService.testApiKey(config);
+      
+      this.logger.log(`API key test completed for ${provider}: ${result.valid ? 'SUCCESS' : 'FAILED'}`);
+      return result;
+    } catch (error) {
+      this.logger.error('Error testing API key:', error.message);
+      
+      // Retornar erro genérico se algo der errado
+      return {
+        valid: false,
+        message: 'Erro interno ao testar API key',
+        provider: provider,
+        model: model,
+      };
+    }
+  }
+
+  /**
+   * Debug method to generate simple text using AI
+   */
+  async debugGenerateText(userId: string, prompt: string, provider: string, model?: string): Promise<{ text: string; provider: string; model?: string }> {
+    try {
+      this.logger.log(`=== DEBUG TEXT GENERATION ===`);
+      this.logger.log(`User ID: ${userId}`);
+      this.logger.log(`Prompt: "${prompt}"`);
+      this.logger.log(`Provider: ${provider}`);
+      this.logger.log(`Model: ${model || 'default'}`);
+      
+      // Buscar dados do usuário (incluindo API key)
+      const user = await this.usersService.findOne(userId);
+      
+      // Verificar se o usuário tem API key configurada
+      if (!user.aiToken) {
+        throw new BadRequestException('User has no AI API key configured. Please configure your AI integration first.');
+      }
+      
+      // Mapear provider para LLMProvider
+      const llmProvider = this.mapProvider(provider);
+      
+      // Criar configuração
+      const config = {
+        provider: llmProvider,
+        apiKey: user.aiToken,
+        model: (user as any).aiModel || model,
+        temperature: 0.7,
+        maxTokens: 200,
+      };
+      
+      this.logger.log(`Using config:`, config);
+      
+      // Gerar texto usando LangChainService
+      const generatedText = await this.langChainService.generateText(prompt, config);
+      
+      this.logger.log(`=== DEBUG GENERATION RESULT ===`);
+      this.logger.log(`Generated text: "${generatedText}"`);
+      this.logger.log(`=== END DEBUG RESULT ===`);
+      
+      return {
+        text: generatedText,
+        provider: provider,
+        model: model,
+      };
+    } catch (error) {
+      this.logger.error('Error in debug text generation:', error.message);
+      this.logger.error('Full error:', error);
+      throw new BadRequestException(`Failed to generate debug text: ${error.message}`);
+    }
   }
 }

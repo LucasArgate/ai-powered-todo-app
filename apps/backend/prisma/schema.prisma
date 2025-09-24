@@ -16,6 +16,7 @@ model User {
   isAnonymous       Boolean  @default(true)
   aiIntegrationType AiIntegrationType?
   aiToken           String?
+  aiModel           String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 

@@ -11,6 +11,13 @@ export class GenerateTasksDto {
   @IsNotEmpty()
   prompt: string;
 
+  @ApiPropertyOptional({
+    description: 'Nome personalizado para a lista de tarefas (se não fornecido, será gerado automaticamente)',
+    example: 'Viagem para o Japão',
+  })
+  @IsOptional()
+  @IsString()
+  listName?: string;
 
   @ApiPropertyOptional({
     description: 'Provedor de IA a ser utilizado (apenas gratuitos)',
@@ -66,4 +73,50 @@ export class AiConfigDto {
   @IsString()
   @IsNotEmpty()
   provider: 'huggingface' | 'openrouter';
+}
+
+export class TestApiKeyDto {
+  @ApiProperty({
+    description: 'API key para testar',
+    example: 'hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  })
+  @IsString()
+  @IsNotEmpty()
+  apiKey: string;
+
+  @ApiProperty({
+    description: 'Provedor de IA para testar',
+    enum: ['huggingface', 'openrouter'],
+    example: 'huggingface',
+  })
+  @IsString()
+  @IsNotEmpty()
+  provider: 'huggingface' | 'openrouter';
+
+  @ApiPropertyOptional({
+    description: 'Modelo específico do provedor para testar',
+    example: 'gpt-3.5-turbo',
+  })
+  @IsOptional()
+  @IsString()
+  model?: string;
+}
+
+export class TestUserApiKeyDto {
+  @ApiProperty({
+    description: 'Provedor de IA para testar',
+    enum: ['huggingface', 'openrouter'],
+    example: 'huggingface',
+  })
+  @IsString()
+  @IsNotEmpty()
+  provider: 'huggingface' | 'openrouter';
+
+  @ApiPropertyOptional({
+    description: 'Modelo específico do provedor para testar',
+    example: 'gpt-3.5-turbo',
+  })
+  @IsOptional()
+  @IsString()
+  model?: string;
 }

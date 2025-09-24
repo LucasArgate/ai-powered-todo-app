@@ -1,20 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { TaskListsService } from './task-lists.service';
 import { CreateTaskListDto, UpdateTaskListDto, TaskListResponseDto } from './dto/task-list.dto';
+import { BaseController } from '../common/base.controller';
 
 @ApiTags('task-lists')
 @ApiBearerAuth()
 @Controller('task-lists')
-export class TaskListsController {
-  constructor(private readonly taskListsService: TaskListsService) {}
-
-  private extractUserIdFromAuthHeader(request: any): string {
-    const authorization = request.headers.authorization;
-    if (!authorization || !authorization.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Invalid authorization header. Expected Bearer token.');
-    }
-    return authorization.substring(7); // Remove 'Bearer ' prefix
+export class TaskListsController extends BaseController {
+  constructor(private readonly taskListsService: TaskListsService) {
+    super();
   }
 
   @Post()

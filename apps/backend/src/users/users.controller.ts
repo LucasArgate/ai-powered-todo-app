@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { ConfigureAiIntegrationDto } from './dto/ai-integration.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -60,5 +61,20 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Patch(':id/ai-integration')
+  @ApiOperation({ 
+    summary: 'Configure AI integration for user',
+    description: 'Configure AI provider, API token and model for a specific user'
+  })
+  @ApiBody({ type: ConfigureAiIntegrationDto })
+  @ApiResponse({ status: 200, description: 'AI integration configured successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  configureAiIntegration(
+    @Param('id') id: string, 
+    @Body() configureAiDto: ConfigureAiIntegrationDto
+  ) {
+    return this.usersService.configureAiIntegration(id, configureAiDto);
   }
 }

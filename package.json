@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Smart To-Do List with AI-powered task generation",
   "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "dev": "concurrently \"pnpm --filter backend dev\" \"pnpm --filter frontend dev\"",
     "dev-api": "pnpm --filter backend dev",

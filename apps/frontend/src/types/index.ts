@@ -5,6 +5,7 @@ export interface User {
   isAnonymous: boolean;
   aiIntegrationType?: 'huggingface' | 'openrouter';
   aiToken?: string;
+  aiModel?: string;
 }
 
 // Task List types
@@ -37,6 +38,7 @@ export interface UpdateUserRequest {
   name?: string;
   aiIntegrationType?: 'huggingface' | 'openrouter';
   aiToken?: string;
+  aiModel?: string;
 }
 
 export interface CreateTaskListRequest {
