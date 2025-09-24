@@ -82,7 +82,7 @@ pnpm build-app    # Frontend apenas
 - ✅ **Persistência com SQLite** + Prisma ORM (conforme especificado no desafio)
 - ✅ **Geração automática de listas completas** com IA
 - ✅ **Autenticação por Bearer Token**
-- ✅ **Documentação interativa** com Swagger UI
+- ✅ **Documentação interativa** com Swagger UI + OpenAPI JSON (compatível com MCP servers)
 
 ### Frontend (Next.js)
 - ✅ Interface para gerenciar listas de tarefas

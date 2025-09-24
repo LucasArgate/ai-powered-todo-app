@@ -7,19 +7,25 @@ http://localhost:3001
 
 > **Nota:** Este projeto utiliza **SQLite** como banco de dados conforme especificado no desafio técnico, garantindo simplicidade e portabilidade.
 
-## 📚 Documentação Interativa (Swagger)
+## 📚 Documentação Interativa (Swagger + OpenAPI)
 
 Para uma experiência completa de documentação e teste da API, acesse:
 
-- **Swagger UI**: [http://localhost:3001/api](http://localhost:3001/api)
-- **JSON Schema**: [http://localhost:3001/api-json](http://localhost:3001/api-json)
+- **Swagger UI**: [http://localhost:3001/api](http://localhost:3001/api) - Interface interativa para teste e documentação
+- **OpenAPI JSON**: [http://localhost:3001/api-json](http://localhost:3001/api-json) - Especificação padrão OpenAPI 3.0
 
-O Swagger UI oferece:
+### Swagger UI oferece:
 - ✅ Documentação interativa de todos os endpoints
 - ✅ Teste de APIs diretamente na interface
 - ✅ Exemplos de requisições e respostas
 - ✅ Validação de dados em tempo real
 - ✅ Esquemas de dados detalhados
+
+### OpenAPI JSON permite:
+- ✅ **Integração com MCP Servers** - Facilita conexão com Model Context Protocol servers
+- ✅ **Ferramentas de terceiros** - Compatível com Postman, Insomnia, etc.
+- ✅ **Geração de código** - Permite gerar clientes automaticamente
+- ✅ **Automação de testes** - Base para testes automatizados e CI/CD
 
 ## Endpoints
 

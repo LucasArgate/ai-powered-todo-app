@@ -44,12 +44,12 @@ Backend API para a aplicação de lista de tarefas com IA, construído com NestJ
 
 ## 📚 Documentação da API
 
-A API possui documentação interativa completa através do **Swagger UI**:
+A API possui documentação interativa completa através do **Swagger UI** e **OpenAPI JSON**:
 
-- **Swagger UI**: `http://localhost:3001/api`
-- **JSON Schema**: `http://localhost:3001/api-json`
+- **Swagger UI**: `http://localhost:3001/api` - Interface interativa para teste e documentação
+- **OpenAPI JSON**: `http://localhost:3001/api-json` - Especificação padrão OpenAPI 3.0
 
-### Funcionalidades do Swagger
+### Por que Swagger UI?
 
 - ✅ **Documentação interativa** de todos os endpoints
 - ✅ **Teste de APIs** diretamente na interface
@@ -57,6 +57,14 @@ A API possui documentação interativa completa através do **Swagger UI**:
 - ✅ **Validação de dados** em tempo real
 - ✅ **Esquemas de dados** detalhados
 - ✅ **Códigos de status** HTTP documentados
+
+### Por que OpenAPI JSON?
+
+- ✅ **Padrão da indústria** - Especificação OpenAPI 3.0 amplamente adotada
+- ✅ **Integração com MCP Servers** - Facilita conexão com Model Context Protocol servers
+- ✅ **Ferramentas de terceiros** - Compatível com Postman, Insomnia, etc.
+- ✅ **Geração de código** - Permite gerar clientes automaticamente
+- ✅ **Automação de testes** - Base para testes automatizados e CI/CD
 
 ## 🔧 Configuração
 
