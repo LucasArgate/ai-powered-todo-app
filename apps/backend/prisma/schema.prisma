@@ -57,6 +57,19 @@ model Task {
   @@map("tasks")
 }
 
+model Provider {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  free        Boolean  @default(false)
+  models      String   // JSON array of available models
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("providers")
+}
+
 enum AiIntegrationType {
   huggingface
   openrouter

@@ -294,7 +294,7 @@ export class LangChainService {
       this.logger.log(`Temperature: ${config.temperature ?? 0.7}`);
       
       const hf = new HfInference(config.apiKey);
-      const model = config.model ?? 'microsoft/DialoGPT-medium';
+      const model = config.model;
 
       // Try text generation first, fallback to conversational if needed
       try {

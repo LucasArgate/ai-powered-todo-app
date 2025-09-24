@@ -152,32 +152,4 @@ export class AiController extends BaseController {
     );
   }
 
-  @Post('debug-generate')
-  @ApiOperation({ 
-    summary: 'Debug - Gerar texto simples para teste',
-    description: 'Endpoint para debug que gera texto simples usando IA para testar a conectividade e resposta'
-  })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'Texto gerado pela IA',
-    schema: {
-      type: 'object',
-      properties: {
-        text: { type: 'string', example: 'Resposta da IA' },
-        provider: { type: 'string', example: 'huggingface' },
-        model: { type: 'string', example: 'gpt2' }
-      }
-    }
-  })
-  async debugGenerate(
-    @Req() request: any,
-    @Body() body: { prompt?: string; provider?: string; model?: string }
-  ) {
-    const userId = this.extractUserIdFromAuthHeader(request);
-    const prompt = body.prompt || 'Hello, how are you?';
-    const provider = body.provider || 'huggingface';
-    const model = body.model;
-    
-    return await this.aiService.debugGenerateText(userId, prompt, provider, model);
-  }
 }

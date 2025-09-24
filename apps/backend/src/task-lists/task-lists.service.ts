@@ -86,7 +86,7 @@ export class TaskListsService {
       taskLists.map(async (taskList) => {
         const tasks = await this.prisma.task.findMany({
           where: { listId: taskList.id },
-          orderBy: { position: 'asc' },
+          orderBy: { createdAt: 'desc' },
         });
 
         const tasksCount = tasks.length;
