@@ -61,7 +61,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Add a description..."
+                placeholder="Adicionar uma descrição..."
                 className="w-full text-sm text-secondary-600 px-2 py-1 border border-primary-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
                 rows={2}
               />
@@ -78,7 +78,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
               )}
               {taskList.iaPrompt && (
                 <div className="text-xs text-primary-600 bg-primary-50 px-2 py-1 rounded">
-                  Generated from: "{taskList.iaPrompt}"
+                  Gerado a partir de: "{taskList.iaPrompt}"
                 </div>
               )}
             </div>
@@ -93,7 +93,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
                 variant="primary"
                 onClick={handleSaveEdit}
               >
-                Save
+                Salvar
               </Button>
               <Button
                 size="sm"
@@ -104,7 +104,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
                   onCancelEdit?.();
                 }}
               >
-                Cancel
+                Cancelar
               </Button>
             </>
           ) : (
@@ -115,7 +115,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
                   variant="ghost"
                   onClick={() => onEdit(taskList)}
                 >
-                  Edit
+                  Editar
                 </Button>
               )}
               {onDelete && (
@@ -124,7 +124,7 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
                   variant="danger"
                   onClick={() => onDelete(taskList.id)}
                 >
-                  Delete List
+                  Excluir Lista
                 </Button>
               )}
             </>

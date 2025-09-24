@@ -11,10 +11,10 @@ import {
   CreateTaskRequest,
   UpdateTaskRequest,
 } from '@/types';
+import { authService } from './auth';
 
 class ApiClient {
   private client: AxiosInstance;
-  private userId: string | null = null;
 
   constructor() {
     this.client = axios.create({
@@ -23,100 +23,126 @@ class ApiClient {
         'Content-Type': 'application/json',
       },
     });
-
-    // Load userId from localStorage on initialization
-    if (typeof window !== 'undefined') {
-      this.userId = localStorage.getItem('userId');
-    }
   }
 
   private getHeaders() {
-    const headers: Record<string, string> = {};
-    if (this.userId) {
-      headers['X-User-ID'] = this.userId;
-    }
-    return headers;
+    return authService.getAuthHeaders();
   }
 
   // User endpoints
   async createSession(data: CreateSessionRequest): Promise<User> {
-    const response = await this.client.post('/users/session', data);
-    this.userId = response.data.id;
-    
-    // Save userId to localStorage
-    if (typeof window !== 'undefined' && this.userId) {
-      localStorage.setItem('userId', this.userId);
+    // If userId exists, try to get user by ID, otherwise create new user
+    if (data.userId) {
+      try {
+        const response = await this.client.get(`/users/${data.userId}`);
+        const user = response.data;
+        authService.setUser(user);
+        return user;
+      } catch (error) {
+        // If user not found, create new user
+        console.log('User not found, creating new user');
+      }
     }
     
-    return response.data;
+    // Create new user
+    const response = await this.client.post('/users', {
+      name: undefined,
+      isAnonymous: true,
+    });
+    const user = response.data;
+    
+    // Save user to auth service (which handles localStorage)
+    authService.setUser(user);
+    
+    return user;
   }
 
   async updateUser(data: UpdateUserRequest): Promise<User> {
-    const response = await this.client.patch('/users/me', data, {
+    const userId = authService.getUserId();
+    if (!userId) {
+      throw new Error('User ID not found');
+    }
+    
+    const response = await this.client.patch(`/users/${userId}`, data, {
       headers: this.getHeaders(),
     });
-    return response.data;
+    const user = response.data;
+    
+    // Update user in auth service
+    authService.setUser(user);
+    
+    return user;
   }
 
   // Task List endpoints
   async getTaskLists(): Promise<TaskList[]> {
-    const response = await this.client.get('/lists', {
+    const response = await this.client.get('/task-lists', {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async getTaskList(listId: string): Promise<TaskList> {
-    const response = await this.client.get(`/lists/${listId}`, {
+    const response = await this.client.get(`/task-lists/${listId}`, {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async createTaskList(data: CreateTaskListRequest): Promise<TaskList> {
-    const response = await this.client.post('/lists', data, {
+    const response = await this.client.post('/task-lists', data, {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async generateFromAI(data: GenerateFromAIRequest): Promise<TaskList> {
-    const response = await this.client.post('/lists/generate-from-ai', data, {
+    const response = await this.client.post('/ai/generate-tasklist', data, {
+      headers: this.getHeaders(),
+    });
+    return response.data;
+  }
+
+  async generateTasksPreview(data: GenerateFromAIRequest): Promise<any[]> {
+    const response = await this.client.post('/ai/generate-tasks', data, {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async updateTaskList(listId: string, data: UpdateTaskListRequest): Promise<TaskList> {
-    const response = await this.client.patch(`/lists/${listId}`, data, {
+    const response = await this.client.patch(`/task-lists/${listId}`, data, {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async deleteTaskList(listId: string): Promise<void> {
-    await this.client.delete(`/lists/${listId}`, {
+    await this.client.delete(`/task-lists/${listId}`, {
       headers: this.getHeaders(),
     });
   }
 
   // Task endpoints
   async createTask(listId: string, data: CreateTaskRequest): Promise<Task> {
-    const response = await this.client.post(`/lists/${listId}/tasks`, data, {
+    const response = await this.client.post('/tasks', {
+      ...data,
+      listId: listId,
+    }, {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async updateTask(listId: string, taskId: string, data: UpdateTaskRequest): Promise<Task> {
-    const response = await this.client.patch(`/lists/${listId}/tasks/${taskId}`, data, {
+    const response = await this.client.patch(`/tasks/${taskId}`, data, {
       headers: this.getHeaders(),
     });
     return response.data;
   }
 
   async deleteTask(listId: string, taskId: string): Promise<void> {
-    await this.client.delete(`/lists/${listId}/tasks/${taskId}`, {
+    await this.client.delete(`/tasks/${taskId}`, {
       headers: this.getHeaders(),
     });
   }

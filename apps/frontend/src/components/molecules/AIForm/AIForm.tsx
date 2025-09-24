@@ -35,43 +35,43 @@ const AIForm: React.FC<AIFormProps> = ({
     <Card className="bg-gradient-to-br from-primary-50 to-secondary-50 border-primary-200">
       <div className="text-center mb-4">
         <h3 className="text-lg font-semibold text-primary-900 mb-2">
-          Generate Tasks with AI
+          Gerar Tarefas com IA
         </h3>
         <p className="text-sm text-secondary-600">
-          Describe your goal and let AI create actionable tasks for you
+          Descreva seu objetivo e deixe a IA criar tarefas acionáveis para você
         </p>
       </div>
 
       {!hasAIConfiguration && (
         <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-sm text-yellow-800 mb-2">
-            You need to configure your AI provider first.
+            Você precisa configurar seu provedor de IA primeiro.
           </p>
           <Button
             variant="secondary"
             size="sm"
             onClick={onConfigureAI}
           >
-            Configure AI Settings
+            Configurar IA
           </Button>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
-          label="List Name"
+          label="Nome da Lista"
           value={listName}
           onChange={(e) => setListName(e.target.value)}
-          placeholder="e.g., Plan My Vacation"
+          placeholder="ex.: Planejar Minhas Férias"
           disabled={isLoading || !hasAIConfiguration}
           required
         />
 
         <Textarea
-          label="Describe your goal"
+          label="Descreva seu objetivo"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="e.g., Plan a 10-day trip to Japan including flights, hotels, and activities"
+          placeholder="ex.: Planejar uma viagem de 10 dias ao Japão incluindo voos, hotéis e atividades"
           rows={3}
           disabled={isLoading || !hasAIConfiguration}
           required
@@ -84,13 +84,13 @@ const AIForm: React.FC<AIFormProps> = ({
           disabled={!listName.trim() || !prompt.trim() || !hasAIConfiguration}
           className="w-full"
         >
-          {isLoading ? 'Generating Tasks...' : 'Generate Tasks with AI'}
+          {isLoading ? 'Gerando Tarefas...' : 'Gerar Tarefas com IA'}
         </Button>
       </form>
 
       {hasAIConfiguration && (
         <div className="mt-3 text-xs text-secondary-500 text-center">
-          Using {aiIntegrationType === 'huggingface' ? 'Hugging Face' : 'OpenRouter'} AI
+          Usando IA {aiIntegrationType === 'huggingface' ? 'Hugging Face' : 'OpenRouter'}
         </div>
       )}
     </Card>

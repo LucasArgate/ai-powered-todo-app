@@ -22,7 +22,8 @@ Uma interface moderna e responsiva que permite aos usuários:
 - ✅ **Atomic Design**: Arquitetura de componentes escalável e reutilizável
 - ✅ **Tailwind CSS**: Sistema de design consistente e responsivo
 - ✅ **Axios**: Cliente HTTP robusto para comunicação com a API
-- ✅ **Custom Hooks**: Gerenciamento de estado centralizado e eficiente
+- ✅ **Redux Toolkit**: Gerenciamento de estado global previsível e escalável
+- ✅ **Custom Hooks**: Abstração de lógica de negócio reutilizável
 
 ## 📁 Estrutura do Projeto
 
@@ -52,9 +53,18 @@ src/
 │       ├── MainLayout/    # Layout principal
 │       └── TaskListTemplate/ # Template de lista
 ├── hooks/                 # Hooks customizados
-│   └── useAppState.ts     # Gerenciamento de estado
+│   ├── useReduxAuth.ts    # Hook de autenticação com Redux
+│   ├── useReduxTaskList.ts # Hook de tarefas com Redux
+│   ├── useAuth.ts         # Hook de autenticação (legado)
+│   └── useAppState.ts     # Hook de estado (legado)
+├── store/                 # Redux Store
+│   ├── index.ts           # Configuração do store
+│   ├── hooks.ts           # Hooks tipados do Redux
+│   ├── authSlice.ts       # Slice de autenticação
+│   └── taskListSlice.ts   # Slice de listas de tarefas
 ├── lib/                   # Bibliotecas utilitárias
-│   └── api.ts             # Cliente da API
+│   ├── api.ts             # Cliente da API
+│   └── auth.ts            # Serviço de autenticação
 └── types/                 # Definições TypeScript
     └── index.ts           # Tipos da aplicação
 ```
@@ -88,6 +98,35 @@ O frontend segue os princípios do **Atomic Design** de Brad Frost, criando uma 
 - **📈 Escalabilidade**: Fácil adição de novas funcionalidades
 - **🎨 Consistência**: Design system unificado em toda a aplicação
 - **⚡ Performance**: Componentes otimizados e lazy loading
+
+## 🔄 Gerenciamento de Estado com Redux
+
+### Por que Redux?
+
+**Problema**: O estado do usuário não sincronizava entre componentes. Quando o nome era alterado nas configurações, o header não atualizava automaticamente.
+
+**Solução**: Redux Toolkit para estado global centralizado.
+
+### Arquitetura
+
+```
+store/
+├── authSlice.ts       # Estado do usuário
+├── taskListSlice.ts   # Estado das tarefas
+└── hooks.ts           # Hooks tipados
+```
+
+### Benefícios
+
+- ✅ **Atualização instantânea** do header quando usuário é alterado
+- ✅ **Estado consistente** em toda aplicação
+- ✅ **Debugging facilitado** com Redux DevTools
+- ✅ **Sem reload** da página necessário
+
+### Hooks Customizados
+
+- `useReduxAuth()` - Gerenciamento de autenticação
+- `useReduxTaskList()` - Gerenciamento de tarefas
 
 ## 🛠️ Como executar a aplicação
 
@@ -153,14 +192,14 @@ A comunicação com o backend NestJS é feita através de um cliente centralizad
 - **Tratamento de Erros**: Gerenciamento consistente de erros
 - **Type Safety**: Tipagem completa para todas as operações
 
-### Gerenciamento de Estado
-O estado da aplicação é gerenciado através do hook customizado `useAppState`:
+### Gerenciamento de Estado com Redux
+O estado da aplicação é gerenciado através do **Redux Toolkit** com arquitetura de slices:
 
-- **Estado do Usuário**: Sessão e configurações
-- **Listas de Tarefas**: Todas as listas e seleção atual
-- **Estados de Carregamento**: Indicadores de loading e erro
-- **Operações CRUD**: Todas as operações de dados
-- **Funcionalidades IA**: Integração completa com IA
+- **Auth Slice**: Estado de autenticação, usuário e sessão
+- **TaskList Slice**: Listas de tarefas e operações CRUD
+- **Estado Global**: Sincronização automática entre todos os componentes
+- **Actions Assíncronas**: Thunks para operações de API
+- **Hooks Customizados**: `useReduxAuth` e `useReduxTaskList` para abstração
 
 ## 🎨 Sistema de Design
 
@@ -199,7 +238,7 @@ Route (app)                              Size     First Load JS
 - **Linguagem**: TypeScript com modo strict
 - **Styling**: Tailwind CSS com design system customizado
 - **HTTP Client**: Axios com interceptors
-- **State Management**: Custom hooks para gerenciamento centralizado
+- **State Management**: Redux Toolkit para gerenciamento de estado global
 
 ### Padrões de Desenvolvimento
 - **Atomic Design**: Arquitetura de componentes escalável
@@ -214,9 +253,10 @@ Route (app)                              Size     First Load JS
 - ~~Implementação Atomic Design~~ ✅ **Concluído**
 - ~~Integração com Backend~~ ✅ **Concluído**
 - ~~Interface Responsiva~~ ✅ **Concluído**
-- ~~Gerenciamento de Estado~~ ✅ **Concluído**
+- ~~Gerenciamento de Estado com Redux~~ ✅ **Concluído**
 - ~~Integração com IA~~ ✅ **Concluído**
 - ~~Build Otimizado~~ ✅ **Concluído**
+- ~~Sincronização de Estado Global~~ ✅ **Concluído**
 
 ### 🚧 Em desenvolvimento
 - Testes de integração
@@ -240,7 +280,7 @@ Route (app)                              Size     First Load JS
 - **🏗️ Atomic Design**: Implementação completa da metodologia de Brad Frost
 - **📦 Componentização**: Sistema de componentes reutilizáveis e escaláveis
 - **📱 Responsive Design**: Interface adaptável para todos os dispositivos
-- **🔄 State Management**: Gerenciamento de estado eficiente com custom hooks
+- **🔄 Redux State Management**: Gerenciamento de estado global com Redux Toolkit
 
 ### Qualidade de Código
 - **🔒 TypeScript**: Tipagem estática completa para maior segurança
@@ -253,3 +293,5 @@ Route (app)                              Size     First Load JS
 - **📦 Build Otimizado**: Bundle otimizado para produção (28kB página principal)
 - **🔄 Real-time**: Atualizações em tempo real sem recarregar página
 - **📡 API Client**: Cliente HTTP otimizado com interceptors e tratamento de erros
+- **🏛️ Redux Architecture**: Estado global centralizado com Redux Toolkit
+- **🔧 Redux DevTools**: Debugging avançado com time-travel debugging

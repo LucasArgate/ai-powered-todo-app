@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAppState } from '@/hooks/useAppState';
+import { useReduxAuth } from '@/hooks/useReduxAuth';
+import { useReduxTaskList } from '@/hooks/useReduxTaskList';
 import MainLayout from '@/components/templates/MainLayout/MainLayout';
 import TaskListSelector from '@/components/organisms/TaskListSelector/TaskListSelector';
 import TaskListTemplate from '@/components/templates/TaskListTemplate/TaskListTemplate';
 import AISettings from '@/components/organisms/AISettings/AISettings';
+import WelcomeCard from '@/components/organisms/WelcomeCard/WelcomeCard';
 import Card from '@/components/atoms/Card/Card';
 import Button from '@/components/atoms/Button/Button';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
@@ -13,14 +15,17 @@ import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
 export default function HomePage() {
   const {
     user,
+    isLoading: authLoading,
+    error: authError,
+    updateUser,
+  } = useReduxAuth();
+  
+  const {
     taskLists,
     currentTaskList,
-    isLoading,
-    error,
-    initializeUser,
-    loadTaskLists,
+    isLoading: taskListLoading,
+    error: taskListError,
     loadTaskList,
-    updateUser,
     createTaskList,
     generateFromAI,
     updateTaskList,
@@ -30,7 +35,10 @@ export default function HomePage() {
     editTask,
     deleteTask,
     clearError,
-  } = useAppState();
+  } = useReduxTaskList();
+
+  const isLoading = authLoading || taskListLoading;
+  const error = authError || taskListError;
 
   const [showAISettings, setShowAISettings] = useState(false);
   const [showCreateListForm, setShowCreateListForm] = useState(false);
@@ -38,17 +46,7 @@ export default function HomePage() {
   const [newListDescription, setNewListDescription] = useState('');
   const [isEditingHeader, setIsEditingHeader] = useState(false);
 
-  // Initialize app
-  useEffect(() => {
-    initializeUser();
-  }, [initializeUser]);
-
-  // Load task lists when user is available
-  useEffect(() => {
-    if (user) {
-      loadTaskLists();
-    }
-  }, [user, loadTaskLists]);
+  // Task lists are loaded automatically by useReduxTaskList when user is available
 
   const handleSelectTaskList = (taskList: any) => {
     loadTaskList(taskList.id);
@@ -72,9 +70,21 @@ export default function HomePage() {
     await generateFromAI(listName, prompt);
   };
 
+  const handleGenerateWithAI = async (prompt: string) => {
+    if (prompt.trim()) {
+      await generateFromAI('Lista Gerada por IA', prompt.trim());
+    }
+  };
+
   const handleUpdateUser = async (userData: any) => {
-    await updateUser(userData);
-    setShowAISettings(false);
+    try {
+      await updateUser(userData);
+      setShowAISettings(false);
+      // Com Redux, o estado global é atualizado automaticamente
+      // O header será re-renderizado com o novo nome do usuário
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+    }
   };
 
   const handleEditTaskList = (taskList: any) => {
@@ -93,8 +103,33 @@ export default function HomePage() {
   };
 
   const handleDeleteTaskList = async (taskListId: string) => {
-    if (confirm('Are you sure you want to delete this task list? This action cannot be undone.')) {
+    if (confirm('Tem certeza de que deseja excluir esta lista de tarefas? Esta ação não pode ser desfeita.')) {
       await deleteTaskList(taskListId);
+    }
+  };
+
+  // Wrapper functions to include taskListId automatically
+  const handleAddTaskWrapper = async (title: string) => {
+    if (currentTaskList) {
+      await addTask(currentTaskList.id, title);
+    }
+  };
+
+  const handleToggleTaskWrapper = async (taskId: string, isCompleted: boolean) => {
+    if (currentTaskList) {
+      await toggleTask(currentTaskList.id, taskId, isCompleted);
+    }
+  };
+
+  const handleDeleteTaskWrapper = async (taskId: string) => {
+    if (currentTaskList) {
+      await deleteTask(currentTaskList.id, taskId);
+    }
+  };
+
+  const handleEditTaskWrapper = async (taskId: string, newTitle: string) => {
+    if (currentTaskList) {
+      await editTask(currentTaskList.id, taskId, newTitle);
     }
   };
 
@@ -103,7 +138,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-secondary-50 flex items-center justify-center">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-secondary-600">Initializing...</p>
+          <p className="mt-4 text-secondary-600">Inicializando...</p>
         </div>
       </div>
     );
@@ -118,9 +153,9 @@ export default function HomePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-secondary-900 mb-2">Error</h3>
+          <h3 className="text-lg font-medium text-secondary-900 mb-2">Erro</h3>
           <p className="text-secondary-600 mb-4">{error}</p>
-          <Button onClick={clearError}>Try Again</Button>
+          <Button onClick={clearError}>Tentar Novamente</Button>
         </Card>
       </MainLayout>
     );
@@ -146,31 +181,31 @@ export default function HomePage() {
         <div className="max-w-md mx-auto">
           <Card>
             <h2 className="text-xl font-semibold text-secondary-900 mb-4">
-              Create New Task List
+              Criar Nova Lista de Tarefas
             </h2>
             <form onSubmit={handleSubmitCreateList} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-secondary-700 mb-1">
-                  List Name
+                  Nome da Lista
                 </label>
                 <input
                   type="text"
                   value={newListName}
                   onChange={(e) => setNewListName(e.target.value)}
                   className="input-field"
-                  placeholder="Enter list name"
+                  placeholder="Digite o nome da lista"
                   required
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-secondary-700 mb-1">
-                  Description (Optional)
+                  Descrição (Opcional)
                 </label>
                 <textarea
                   value={newListDescription}
                   onChange={(e) => setNewListDescription(e.target.value)}
                   className="input-field"
-                  placeholder="Enter description"
+                  placeholder="Digite uma descrição"
                   rows={3}
                 />
               </div>
@@ -181,14 +216,14 @@ export default function HomePage() {
                   isLoading={isLoading}
                   disabled={!newListName.trim()}
                 >
-                  Create List
+                  Criar Lista
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   onClick={() => setShowCreateListForm(false)}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </div>
             </form>
@@ -206,10 +241,10 @@ export default function HomePage() {
         tasks={currentTaskList.tasks || []}
         isLoading={isLoading}
         isEditingHeader={isEditingHeader}
-        onAddTask={addTask}
-        onToggleTask={toggleTask}
-        onDeleteTask={deleteTask}
-        onEditTask={editTask}
+        onAddTask={handleAddTaskWrapper}
+        onToggleTask={handleToggleTaskWrapper}
+        onDeleteTask={handleDeleteTaskWrapper}
+        onEditTask={handleEditTaskWrapper}
         onEditTaskList={handleEditTaskList}
         onSaveTaskListEdit={handleSaveTaskListEdit}
         onCancelTaskListEdit={handleCancelTaskListEdit}
@@ -222,8 +257,8 @@ export default function HomePage() {
 
   return (
     <MainLayout user={user} onConfigureAI={() => setShowAISettings(true)}>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+        <div className="lg:col-span-4">
           <TaskListSelector
             taskLists={taskLists}
             isLoading={isLoading}
@@ -233,31 +268,14 @@ export default function HomePage() {
           />
         </div>
         
-        <div className="lg:col-span-1">
-          <Card className="text-center py-8">
-            <h3 className="text-lg font-semibold text-secondary-900 mb-4">
-              Welcome to Smart Todo List
-            </h3>
-            <p className="text-secondary-600 mb-6">
-              Create task lists manually or let AI generate them for you based on your goals.
-            </p>
-            <div className="space-y-3">
-              <Button
-                variant="primary"
-                onClick={handleCreateNewList}
-                className="w-full"
-              >
-                Create Manual List
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setShowAISettings(true)}
-                className="w-full"
-              >
-                Configure AI Settings
-              </Button>
-            </div>
-          </Card>
+        <div className="lg:col-span-3">
+          <WelcomeCard
+            user={user}
+            isLoading={isLoading}
+            onCreateManualList={handleCreateNewList}
+            onConfigureAI={() => setShowAISettings(true)}
+            onGenerateWithAI={handleGenerateWithAI}
+          />
         </div>
       </div>
     </MainLayout>

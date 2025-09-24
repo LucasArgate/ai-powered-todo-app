@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { AuthProvider } from '@/components/providers/AuthProvider'
+import { ReduxProvider } from '@/components/providers/ReduxProvider'
 
 export const metadata: Metadata = {
   title: 'Smart Todo List',
@@ -12,9 +14,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body className="antialiased">
-        {children}
+        <ReduxProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   )

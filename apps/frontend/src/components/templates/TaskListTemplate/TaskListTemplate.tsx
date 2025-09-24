@@ -45,10 +45,10 @@ const TaskListTemplate: React.FC<TaskListTemplateProps> = ({
       <MainLayout user={user} onConfigureAI={onConfigureAI}>
         <div className="text-center py-12">
           <h2 className="text-2xl font-semibold text-secondary-900 mb-4">
-            No Task List Selected
+            Nenhuma Lista de Tarefas Selecionada
           </h2>
           <p className="text-secondary-600">
-            Please select a task list from the sidebar or create a new one.
+            Selecione uma lista de tarefas da barra lateral ou crie uma nova.
           </p>
         </div>
       </MainLayout>

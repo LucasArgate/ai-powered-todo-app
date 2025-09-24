@@ -88,7 +88,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               onClick={handleSaveEdit}
               className="px-2 py-1"
             >
-              Save
+              Salvar
             </Button>
             <Button
               size="sm"
@@ -99,7 +99,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               }}
               className="px-2 py-1"
             >
-              Cancel
+              Cancelar
             </Button>
           </>
         ) : (
@@ -111,7 +111,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 onClick={onStartEdit}
                 className="px-2 py-1 text-xs"
               >
-                Edit
+                Editar
               </Button>
             )}
             <Button
@@ -120,7 +120,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
               onClick={() => onDelete(task.id)}
               className="px-2 py-1 text-xs"
             >
-              Delete
+              Excluir
             </Button>
           </>
         )}

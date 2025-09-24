@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User, TaskList, Task, AppState } from '@/types';
 import { apiClient } from '@/lib/api';
+import { useAuth } from './useAuth';
 
 export const useAppState = () => {
+  const { user, isLoading: authLoading, error: authError } = useAuth();
   const [state, setState] = useState<AppState>({
     user: null,
     taskLists: [],
@@ -11,22 +13,12 @@ export const useAppState = () => {
     error: null,
   });
 
-  // Initialize user session
-  const initializeUser = useCallback(async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-    
-    try {
-      const userId = localStorage.getItem('userId');
-      const user = await apiClient.createSession({ userId: userId || undefined });
-      setState(prev => ({ ...prev, user, isLoading: false }));
-    } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        error: 'Failed to initialize user session', 
-        isLoading: false 
-      }));
+  // Update state when auth user changes - ensure immediate sync
+  useEffect(() => {
+    if (user !== state.user) {
+      setState(prev => ({ ...prev, user }));
     }
-  }, []);
+  }, [user, state.user]);
 
   // Load task lists
   const loadTaskLists = useCallback(async () => {
@@ -40,7 +32,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to load task lists', 
+        error: 'Falha ao carregar listas de tarefas', 
         isLoading: false 
       }));
     }
@@ -62,33 +54,22 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to load task list', 
+        error: 'Falha ao carregar lista de tarefas', 
         isLoading: false 
       }));
     }
   }, [state.user]);
 
-  // Update user
+  // Update user - now handled by useAuth hook
   const updateUser = useCallback(async (userData: { 
     name?: string; 
     aiIntegrationType?: 'huggingface' | 'openrouter'; 
     aiToken?: string; 
   }) => {
-    if (!state.user) return;
-    
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-    
-    try {
-      const updatedUser = await apiClient.updateUser(userData);
-      setState(prev => ({ ...prev, user: updatedUser, isLoading: false }));
-    } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
-        error: 'Failed to update user', 
-        isLoading: false 
-      }));
-    }
-  }, [state.user]);
+    // This is now handled by the useAuth hook
+    // The user state will be updated automatically through the auth hook
+    console.warn('updateUser está depreciado. Use o hook useAuth diretamente.');
+  }, []);
 
   // Create task list
   const createTaskList = useCallback(async (name: string, description?: string) => {
@@ -107,7 +88,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to create task list', 
+        error: 'Falha ao criar lista de tarefas', 
         isLoading: false 
       }));
     }
@@ -130,7 +111,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to generate tasks from AI', 
+        error: 'Falha ao gerar tarefas da IA', 
         isLoading: false 
       }));
     }
@@ -155,7 +136,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to update task list', 
+        error: 'Falha ao atualizar lista de tarefas', 
         isLoading: false 
       }));
     }
@@ -178,7 +159,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to delete task list', 
+        error: 'Falha ao excluir lista de tarefas', 
         isLoading: false 
       }));
     }
@@ -205,7 +186,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to add task', 
+        error: 'Falha ao adicionar tarefa', 
         isLoading: false 
       }));
     }
@@ -233,7 +214,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to update task', 
+        error: 'Falha ao atualizar tarefa', 
         isLoading: false 
       }));
     }
@@ -261,7 +242,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to edit task', 
+        error: 'Falha ao editar tarefa', 
         isLoading: false 
       }));
     }
@@ -287,7 +268,7 @@ export const useAppState = () => {
     } catch (error) {
       setState(prev => ({ 
         ...prev, 
-        error: 'Failed to delete task', 
+        error: 'Falha ao excluir tarefa', 
         isLoading: false 
       }));
     }
@@ -300,7 +281,9 @@ export const useAppState = () => {
 
   return {
     ...state,
-    initializeUser,
+    user, // Always use the latest user from useAuth
+    isLoading: state.isLoading || authLoading,
+    error: state.error || authError,
     loadTaskLists,
     loadTaskList,
     updateUser,

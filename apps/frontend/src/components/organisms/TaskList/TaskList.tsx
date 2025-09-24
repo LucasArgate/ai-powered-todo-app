@@ -46,7 +46,7 @@ const TaskList: React.FC<TaskListProps> = ({
       <TaskForm
         onSubmit={onAddTask}
         isLoading={isLoading}
-        placeholder={`Add a task to "${taskList.name}"...`}
+        placeholder={`Adicionar tarefa em "${taskList.name}"...`}
       />
 
       {/* Tasks List */}
@@ -57,7 +57,7 @@ const TaskList: React.FC<TaskListProps> = ({
           </div>
         ) : sortedTasks.length === 0 ? (
           <div className="text-center py-8 text-secondary-500">
-            <p>No tasks yet. Add your first task above!</p>
+            <p>Ainda não há tarefas. Adicione sua primeira tarefa acima!</p>
           </div>
         ) : (
           sortedTasks.map((task) => (
@@ -78,7 +78,7 @@ const TaskList: React.FC<TaskListProps> = ({
       {/* Task Stats */}
       {tasks.length > 0 && (
         <div className="text-sm text-secondary-500 text-center pt-4 border-t border-secondary-200">
-          {tasks.filter(task => task.isCompleted).length} of {tasks.length} tasks completed
+          {tasks.filter(task => task.isCompleted).length} de {tasks.length} tarefas concluídas
         </div>
       )}
     </div>

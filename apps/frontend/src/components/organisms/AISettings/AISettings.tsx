@@ -6,7 +6,7 @@ import Button from '@/components/atoms/Button/Button';
 
 export interface AISettingsProps {
   user: User;
-  onUpdateUser: (data: { aiIntegrationType?: 'huggingface' | 'openrouter'; aiToken?: string }) => void;
+  onUpdateUser: (data: { name?: string; aiIntegrationType?: 'huggingface' | 'openrouter'; aiToken?: string }) => void;
   isLoading?: boolean;
 }
 
@@ -15,6 +15,7 @@ const AISettings: React.FC<AISettingsProps> = ({
   onUpdateUser,
   isLoading = false,
 }) => {
+  const [userName, setUserName] = React.useState(user.name || '');
   const [aiType, setAiType] = React.useState<'huggingface' | 'openrouter' | ''>(
     user.aiIntegrationType || ''
   );
@@ -22,15 +23,18 @@ const AISettings: React.FC<AISettingsProps> = ({
 
   const handleSave = () => {
     onUpdateUser({
+      name: userName.trim() || undefined,
       aiIntegrationType: aiType as 'huggingface' | 'openrouter',
       aiToken: aiToken.trim() || undefined,
     });
   };
 
   const handleClear = () => {
+    setUserName('');
     setAiType('');
     setAiToken('');
     onUpdateUser({
+      name: undefined,
       aiIntegrationType: undefined,
       aiToken: undefined,
     });
@@ -40,17 +44,28 @@ const AISettings: React.FC<AISettingsProps> = ({
     <Card>
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-secondary-900 mb-2">
-          AI Configuration
+          Configuração de IA
         </h3>
         <p className="text-sm text-secondary-600">
-          Configure your AI provider to generate tasks automatically
+          Configure seu provedor de IA para gerar tarefas automaticamente
         </p>
       </div>
 
       <div className="space-y-4">
         <div>
+          <Input
+            label="Nome do Usuário"
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder="Digite seu nome"
+            helperText="Deixe em branco para usar 'Usuário Anônimo'"
+          />
+        </div>
+
+        <div>
           <label className="block text-sm font-medium text-secondary-700 mb-2">
-            AI Provider
+            Provedor de IA
           </label>
           <div className="space-y-2">
             <label className="flex items-center">
@@ -84,11 +99,11 @@ const AISettings: React.FC<AISettingsProps> = ({
             type="password"
             value={aiToken}
             onChange={(e) => setAiToken(e.target.value)}
-            placeholder={`Enter your ${aiType === 'huggingface' ? 'Hugging Face' : 'OpenRouter'} API token`}
+            placeholder={`Digite seu token de API ${aiType === 'huggingface' ? 'Hugging Face' : 'OpenRouter'}`}
             helperText={
               aiType === 'huggingface'
-                ? 'Get your token from huggingface.co/settings/tokens'
-                : 'Get your token from openrouter.ai/keys'
+                ? 'Obtenha seu token em huggingface.co/settings/tokens'
+                : 'Obtenha seu token em openrouter.ai/keys'
             }
           />
         )}
@@ -98,16 +113,16 @@ const AISettings: React.FC<AISettingsProps> = ({
             variant="primary"
             onClick={handleSave}
             isLoading={isLoading}
-            disabled={!aiType || !aiToken.trim()}
+            disabled={isLoading}
           >
-            Save Configuration
+            Salvar Configuração
           </Button>
           <Button
             variant="ghost"
             onClick={handleClear}
             disabled={isLoading}
           >
-            Clear
+            Limpar
           </Button>
         </div>
       </div>
@@ -115,7 +130,7 @@ const AISettings: React.FC<AISettingsProps> = ({
       {user.aiIntegrationType && (
         <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
           <p className="text-sm text-green-800">
-            ✓ AI configured with {user.aiIntegrationType === 'huggingface' ? 'Hugging Face' : 'OpenRouter'}
+            ✓ IA configurada com {user.aiIntegrationType === 'huggingface' ? 'Hugging Face' : 'OpenRouter'}
           </p>
         </div>
       )}

@@ -10,7 +10,7 @@ export interface TaskFormProps {
 
 const TaskForm: React.FC<TaskFormProps> = ({
   onSubmit,
-  placeholder = 'Add a new task...',
+  placeholder = 'Adicionar nova tarefa...',
   isLoading = false,
 }) => {
   const [title, setTitle] = React.useState('');
@@ -38,7 +38,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
         isLoading={isLoading}
         disabled={!title.trim()}
       >
-        Add Task
+        Adicionar
       </Button>
     </form>
   );

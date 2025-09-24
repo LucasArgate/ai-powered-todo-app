@@ -32,24 +32,24 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-secondary-900">Your Task Lists</h2>
+        <h2 className="text-lg font-semibold text-secondary-900">Suas Listas de Tarefas</h2>
         <Button
           variant="primary"
           size="sm"
           onClick={onCreateNewList}
         >
-          New List
+          Nova Lista
         </Button>
       </div>
 
       {taskLists.length === 0 ? (
         <Card className="text-center py-8">
-          <p className="text-secondary-500 mb-4">No task lists yet.</p>
+          <p className="text-secondary-500 mb-4">Ainda não há listas de tarefas.</p>
           <Button
             variant="primary"
             onClick={onCreateNewList}
           >
-            Create Your First List
+            Criar Sua Primeira Lista
           </Button>
         </Card>
       ) : (
@@ -76,11 +76,11 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
                   )}
                   {taskList.iaPrompt && (
                     <div className="text-xs text-primary-600 bg-primary-100 px-2 py-1 rounded">
-                      AI Generated
+                      Gerado por IA
                     </div>
                   )}
                   <p className="text-xs text-secondary-500 mt-2">
-                    Created {new Date(taskList.createdAt).toLocaleDateString()}
+                    Criado em {new Date(taskList.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 
@@ -94,7 +94,7 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
                     }}
                     className="ml-2"
                   >
-                    Delete
+                    Excluir
                   </Button>
                 )}
               </div>
