@@ -121,15 +121,24 @@ pnpm start        # Executa em produção
 
 ## 🤖 Como funciona a IA?
 
-### Processo simples em 3 passos:
+### Processo atual (em desenvolvimento):
 
-1. **Configure sua API Key** - Use sua própria chave do Hugging Face ou OpenRouter
-2. **Descreva seu objetivo** - Ex: "planejar uma viagem para o Japão"
-3. **Receba tarefas automáticas** - A IA gera uma lista completa de subtarefas
+1. **Configure sua API Key** ✅ - Use sua própria chave do Hugging Face ou OpenRouter
+2. **Descreva seu objetivo** ✅ - Ex: "planejar uma viagem para o Japão"
+3. **Preview das tarefas** 🚧 - Veja as tarefas antes de criar (em desenvolvimento)
+4. **Receba tarefas automáticas** 🚧 - A IA gera uma lista completa de subtarefas (em desenvolvimento)
 
 ### Provedores de IA suportados:
-- **Hugging Face** - Opção gratuita para testes
-- **OpenRouter** - Acesso a múltiplos modelos LLM (GPT, Claude, etc.)
+- **Hugging Face** ✅ - Opção gratuita para testes (configurado)
+- **OpenRouter** ✅ - Acesso a múltiplos modelos LLM (GPT, Claude, etc.) (configurado)
+
+### Status da Integração IA:
+- ✅ **Configuração**: Sistema de configuração de API Keys implementado
+- ✅ **Interface**: Formulário de entrada para prompts da IA
+- ✅ **Preview**: Componente para mostrar preview das tasks geradas
+- 🚧 **LangChain**: Integração real com provedores (em desenvolvimento)
+- 🚧 **JSON Parsing**: Parser para resposta da IA (em desenvolvimento)
+- 🚧 **Criação**: Endpoint para criar tasks a partir do preview (em desenvolvimento)
 
 ## 🏗️ Arquitetura do Frontend (Atomic Design)
 
@@ -179,25 +188,79 @@ Usuário
 
 ## 📝 Status do Projeto
 
-### ✅ Concluído
+### ✅ Concluído - Infraestrutura Base
 - ~~Configurar o backend NestJS~~ ✅ **Concluído**
 - ~~Implementar a API de tarefas~~ ✅ **Concluído**
 - ~~Integrar com provedores de IA~~ ✅ **Concluído**
 - ~~Documentação técnica completa~~ ✅ **Concluído**
-
-### ✅ Concluído
 - ~~Desenvolver a interface Next.js~~ ✅ **Concluído**
 - ~~Conectar frontend com backend~~ ✅ **Concluído**
 - ~~Implementar interface de usuário moderna~~ ✅ **Concluído**
+- ~~Sistema de autenticação~~ ✅ **Concluído**
+- ~~CRUD completo de listas e tarefas~~ ✅ **Concluído**
+- ~~Interface responsiva com Atomic Design~~ ✅ **Concluído**
 
-### 🚧 Em desenvolvimento
-- Testes de integração
-- Otimizações de performance
+### ✅ Concluído - Funcionalidades Core
+- ~~Gerenciamento de usuários~~ ✅ **Concluído**
+- ~~Criação manual de listas e tarefas~~ ✅ **Concluído**
+- ~~Edição e exclusão de tarefas~~ ✅ **Concluído**
+- ~~Marcação de tarefas como concluídas~~ ✅ **Concluído**
 
-### 📋 Próximos passos
-- Adicionar testes automatizados
-- Deploy em ambiente de produção
-- Melhorias de UX/UI
+### 🚧 Em Desenvolvimento - Geração Inteligente de Tasks
+
+#### 🤖 Sistema de IA - Preview e Geração
+- **🔄 Preview de Tasks**: Sistema para mostrar preview das tasks antes de criar
+  - ✅ Interface de preview implementada
+  - ✅ Componente AIForm com validação
+  - ✅ Integração com configurações de IA
+  - 🚧 **Em desenvolvimento**: Chamada real para LangChain
+  - 🚧 **Em desenvolvimento**: Parsing do JSON response
+  - 🚧 **Em desenvolvimento**: Validação do formato de retorno
+
+- **⚡ LangChain Integration**: Integração completa com provedores de IA
+  - ✅ Estrutura base do LangChain service
+  - ✅ Configuração de múltiplos provedores (Hugging Face, OpenRouter)
+  - 🚧 **Em desenvolvimento**: Prompt engineering otimizado
+  - 🚧 **Em desenvolvimento**: JSON schema validation
+  - 🚧 **Em desenvolvimento**: Error handling robusto
+  - 🚧 **Em desenvolvimento**: Rate limiting e retry logic
+
+- **📊 Task Generation Pipeline**: Pipeline completo de geração
+  - ✅ Frontend: Formulário de entrada com validação
+  - ✅ Frontend: Preview component para mostrar tasks geradas
+  - 🚧 **Em desenvolvimento**: Backend: Endpoint para preview
+  - 🚧 **Em desenvolvimento**: Backend: Endpoint para criação final
+  - 🚧 **Em desenvolvimento**: Validação de qualidade das tasks geradas
+
+#### 🎯 Próximas Implementações Prioritárias
+
+1. **Prompt Engineering** 🚧
+   - Otimizar prompts para gerar tasks acionáveis
+   - Implementar templates específicos por categoria
+   - Adicionar validação de qualidade das respostas
+
+2. **JSON Schema Validation** 🚧
+   - Definir schema rigoroso para resposta da IA
+   - Implementar parser robusto para diferentes formatos
+   - Adicionar fallbacks para respostas malformadas
+
+3. **Preview System** 🚧
+   - Finalizar componente de preview das tasks
+   - Implementar edição manual do preview
+   - Adicionar confirmação antes de criar tasks
+
+4. **Error Handling** 🚧
+   - Tratamento de erros de API da IA
+   - Retry logic para falhas temporárias
+   - Fallback para criação manual quando IA falha
+
+### 📋 Roadmap Futuro
+- **🧪 Testes**: Implementar testes automatizados (unit, integration, e2e)
+- **🚀 Deploy**: Configurar CI/CD e deploy em produção
+- **📱 Mobile**: Otimizações específicas para mobile
+- **🔔 Notificações**: Sistema de lembretes e notificações
+- **📊 Analytics**: Dashboard de produtividade e métricas
+- **🔄 Sync**: Sincronização offline e multi-dispositivo
 
 ## 🛠️ Tecnologias e Padrões Utilizados
 
