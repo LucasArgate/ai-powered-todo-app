@@ -22,7 +22,7 @@ export const useReduxTaskList = () => {
 
   // Load task lists when user is available
   useEffect(() => {
-    if (user) {
+    if (user && taskLists.length === 0) {
       dispatch(loadTaskLists());
     }
   }, [dispatch, user]);

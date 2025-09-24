@@ -23,11 +23,18 @@ const TaskForm: React.FC<TaskFormProps> = ({
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e as any);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">
       <Input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        onKeyPress={handleKeyPress}
         placeholder={placeholder}
         className="flex-1"
         disabled={isLoading}

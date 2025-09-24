@@ -26,7 +26,6 @@ export const initializeAuth = createAsyncThunk(
       if (authService.hasUserId()) {
         // Case 1: userId exists in localStorage
         const userId = authService.getUserId();
-        console.log('User ID found in localStorage:', userId);
         
         // Create session with existing userId
         const user = await apiClient.createSession({ userId: userId! });
@@ -35,8 +34,6 @@ export const initializeAuth = createAsyncThunk(
         return user;
       } else {
         // Case 2: No userId in localStorage
-        console.log('No user ID in localStorage, creating new user');
-        
         const user = await apiClient.createSession({});
         authService.setUser(user);
         

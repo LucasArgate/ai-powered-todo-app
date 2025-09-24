@@ -94,10 +94,17 @@ export const addTask = createAsyncThunk(
   async ({ taskListId, title }: { taskListId: string; title: string }, { getState, rejectWithValue }) => {
     try {
       const state = getState() as { taskList: TaskListState };
-      const currentTaskList = state.taskList.currentTaskList;
-      const position = currentTaskList?.tasks?.length || 0;
       
+      // Find the specific task list to calculate position
+      const targetTaskList = state.taskList.taskLists.find(tl => tl.id === taskListId) || 
+                             state.taskList.currentTaskList;
+      
+      // Calculate position based on target task list tasks length
+      const position = targetTaskList?.tasks?.length || 0;
+      
+      // Create task via API
       const newTask = await apiClient.createTask(taskListId, { title, position });
+      
       return { taskListId, task: newTask };
     } catch (error) {
       return rejectWithValue('Falha ao adicionar tarefa');
@@ -161,7 +168,15 @@ const taskListSlice = createSlice({
       })
       .addCase(loadTaskLists.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.taskLists = action.payload;
+        // Preserve existing tasks when updating task lists
+        const updatedTaskLists = action.payload.map(newTaskList => {
+          const existingTaskList = state.taskLists.find(tl => tl.id === newTaskList.id);
+          return {
+            ...newTaskList,
+            tasks: existingTaskList?.tasks || newTaskList.tasks || []
+          };
+        });
+        state.taskLists = updatedTaskLists;
         state.error = null;
       })
       .addCase(loadTaskLists.rejected, (state, action) => {
@@ -194,7 +209,7 @@ const taskListSlice = createSlice({
       .addCase(createTaskList.fulfilled, (state, action) => {
         state.isLoading = false;
         state.taskLists.push(action.payload);
-        state.currentTaskList = action.payload;
+        // Don't set currentTaskList - let user stay on home page
         state.error = null;
       })
       .addCase(createTaskList.rejected, (state, action) => {
@@ -211,7 +226,7 @@ const taskListSlice = createSlice({
       .addCase(generateFromAI.fulfilled, (state, action) => {
         state.isLoading = false;
         state.taskLists.push(action.payload);
-        state.currentTaskList = action.payload;
+        // Don't set currentTaskList - let user stay on home page
         state.error = null;
       })
       .addCase(generateFromAI.rejected, (state, action) => {
@@ -267,8 +282,14 @@ const taskListSlice = createSlice({
       })
       .addCase(addTask.fulfilled, (state, action) => {
         state.isLoading = false;
+        // Update only the current task list if it matches
         if (state.currentTaskList?.id === action.payload.taskListId) {
           state.currentTaskList.tasks = [...(state.currentTaskList.tasks || []), action.payload.task];
+        }
+        // Also update the task list in the taskLists array
+        const taskListIndex = state.taskLists.findIndex(tl => tl.id === action.payload.taskListId);
+        if (taskListIndex !== -1) {
+          state.taskLists[taskListIndex].tasks = [...(state.taskLists[taskListIndex].tasks || []), action.payload.task];
         }
         state.error = null;
       })
@@ -287,6 +308,13 @@ const taskListSlice = createSlice({
         state.isLoading = false;
         if (state.currentTaskList?.id === action.payload.taskListId) {
           state.currentTaskList.tasks = state.currentTaskList.tasks?.map(task => 
+            task.id === action.payload.taskId ? action.payload.task : task
+          ) || [];
+        }
+        // Also update the task list in the taskLists array
+        const taskListIndex = state.taskLists.findIndex(tl => tl.id === action.payload.taskListId);
+        if (taskListIndex !== -1) {
+          state.taskLists[taskListIndex].tasks = state.taskLists[taskListIndex].tasks?.map(task => 
             task.id === action.payload.taskId ? action.payload.task : task
           ) || [];
         }
@@ -310,6 +338,13 @@ const taskListSlice = createSlice({
             task.id === action.payload.taskId ? action.payload.task : task
           ) || [];
         }
+        // Also update the task list in the taskLists array
+        const taskListIndex = state.taskLists.findIndex(tl => tl.id === action.payload.taskListId);
+        if (taskListIndex !== -1) {
+          state.taskLists[taskListIndex].tasks = state.taskLists[taskListIndex].tasks?.map(task => 
+            task.id === action.payload.taskId ? action.payload.task : task
+          ) || [];
+        }
         state.error = null;
       })
       .addCase(editTask.rejected, (state, action) => {
@@ -327,6 +362,11 @@ const taskListSlice = createSlice({
         state.isLoading = false;
         if (state.currentTaskList?.id === action.payload.taskListId) {
           state.currentTaskList.tasks = state.currentTaskList.tasks?.filter(task => task.id !== action.payload.taskId) || [];
+        }
+        // Also update the task list in the taskLists array
+        const taskListIndex = state.taskLists.findIndex(tl => tl.id === action.payload.taskListId);
+        if (taskListIndex !== -1) {
+          state.taskLists[taskListIndex].tasks = state.taskLists[taskListIndex].tasks?.filter(task => task.id !== action.payload.taskId) || [];
         }
         state.error = null;
       })

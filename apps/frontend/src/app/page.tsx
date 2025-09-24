@@ -37,7 +37,7 @@ export default function HomePage() {
     clearError,
   } = useReduxTaskList();
 
-  const isLoading = authLoading || taskListLoading;
+  const isLoading = authLoading;
   const error = authError || taskListError;
 
   const [showCreateListForm, setShowCreateListForm] = useState(false);
@@ -62,6 +62,15 @@ export default function HomePage() {
       setNewListName('');
       setNewListDescription('');
       setShowCreateListForm(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+      e.preventDefault();
+      if (newListName.trim()) {
+        handleSubmitCreateList(e as any);
+      }
     }
   };
 
@@ -184,6 +193,7 @@ export default function HomePage() {
                   type="text"
                   value={newListName}
                   onChange={(e) => setNewListName(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="input-field"
                   placeholder="Digite o nome da lista"
                   required
@@ -196,6 +206,7 @@ export default function HomePage() {
                 <textarea
                   value={newListDescription}
                   onChange={(e) => setNewListDescription(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="input-field"
                   placeholder="Digite uma descrição"
                   rows={3}
@@ -205,7 +216,7 @@ export default function HomePage() {
                 <Button
                   type="submit"
                   variant="primary"
-                  isLoading={isLoading}
+                  isLoading={taskListLoading}
                   disabled={!newListName.trim()}
                 >
                   Criar Lista
@@ -231,7 +242,7 @@ export default function HomePage() {
         user={user}
         taskList={currentTaskList}
         tasks={currentTaskList.tasks || []}
-        isLoading={isLoading}
+        isLoading={taskListLoading}
         isEditingHeader={isEditingHeader}
         onAddTask={handleAddTaskWrapper}
         onToggleTask={handleToggleTaskWrapper}
@@ -252,12 +263,21 @@ export default function HomePage() {
         <div className="lg:col-span-4">
           <TaskListSelector
             taskLists={taskLists}
-            isLoading={isLoading}
+            isLoading={taskListLoading}
             onSelectTaskList={handleSelectTaskList}
             onCreateNewList={handleCreateNewList}
             onDeleteTaskList={handleDeleteTaskList}
             onAddTask={async (taskListId: string, title: string) => {
               await addTask(taskListId, title);
+            }}
+            onToggleTask={async (taskListId: string, taskId: string, isCompleted: boolean) => {
+              await toggleTask(taskListId, taskId, isCompleted);
+            }}
+            onEditTask={async (taskListId: string, taskId: string, newTitle: string) => {
+              await editTask(taskListId, taskId, newTitle);
+            }}
+            onDeleteTask={async (taskListId: string, taskId: string) => {
+              await deleteTask(taskListId, taskId);
             }}
           />
         </div>
@@ -265,7 +285,7 @@ export default function HomePage() {
         <div className="lg:col-span-3">
           <WelcomeCard
             user={user}
-            isLoading={isLoading}
+            isLoading={taskListLoading}
             onCreateManualList={handleCreateNewList}
             onGenerateWithAI={handleGenerateWithAI}
             onGeneratePreview={handleGeneratePreview}
