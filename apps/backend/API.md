@@ -5,6 +5,8 @@
 http://localhost:3001
 ```
 
+> **Nota:** Este projeto utiliza **SQLite** como banco de dados conforme especificado no desafio técnico, garantindo simplicidade e portabilidade.
+
 ## 📚 Documentação Interativa (Swagger)
 
 Para uma experiência completa de documentação e teste da API, acesse:

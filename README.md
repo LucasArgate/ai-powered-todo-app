@@ -79,7 +79,7 @@ pnpm build-app    # Frontend apenas
 - ✅ **CRUD completo de listas de tarefas e tasks**
 - ✅ **API simplificada** - Um endpoint principal (`GET /task-lists`) retorna tudo
 - ✅ **Integração com APIs de IA** (Hugging Face/OpenRouter)
-- ✅ **Persistência com SQLite** + Prisma ORM
+- ✅ **Persistência com SQLite** + Prisma ORM (conforme especificado no desafio)
 - ✅ **Geração automática de listas completas** com IA
 - ✅ **Autenticação por Bearer Token**
 - ✅ **Documentação interativa** com Swagger UI

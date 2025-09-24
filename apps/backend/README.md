@@ -6,7 +6,7 @@ Backend API para a aplicação de lista de tarefas com IA, construído com NestJ
 
 - **CRUD completo de listas de tarefas e tasks** com validação
 - **Integração com IA** para geração automática de listas de tarefas
-- **Banco SQLite** com Prisma ORM e migrações automáticas
+- **Banco SQLite** com Prisma ORM (conforme especificado no desafio) e migrações automáticas
 - **API REST simplificada** com endpoints otimizados
 - **Autenticação por Bearer Token** (user-id)
 - **CORS configurado** para comunicação com frontend
