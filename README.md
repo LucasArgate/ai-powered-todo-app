@@ -13,6 +13,15 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 - Trocar moeda
 - E muito mais...
 
+### 🎬 Preview da Aplicação
+
+<video width="100%" controls>
+  <source src="./docs/material/preview-app-banner.mp4" type="video/mp4">
+  Seu navegador não suporta o elemento de vídeo.
+</video>
+
+*Veja a aplicação em ação! Interface moderna, geração inteligente de tarefas e experiência de usuário otimizada.*
+
 ## 🚀 Tecnologias Utilizadas
 
 ### Por que essas tecnologias?
@@ -232,27 +241,22 @@ Usuário
   - ~~Backend: Endpoint para criação final (testado)~~ ✅ **Concluído**
   - ~~Validação de qualidade das tasks geradas (implementado)~~ ✅ **Concluído**
 
-#### 🎯 Próximas Implementações Prioritárias
+#### 🎯 Melhorias Futuras
 
-1. **Organização do Código e Ambientes** 🚧
-   - Implementar GitFlow com branches separados (main, develop, feature)
-   - Configurar ambientes de desenvolvimento isolados
-   - Criar esquema de pull requests para main
-
-2. **Estratégia de Testes** 🚧
-   - Implementar testes automatizados (unit, integration, e2e)
-   - Configurar validação de builds com testes
-   - Criar pipeline de CI/CD com GitHub Actions
-
-3. **Controle de Versão e Releases** 🚧
-   - Implementar sistema de versionamento semântico
-   - Criar processo de releases para controle de valor entregue
-   - Documentar changelog e histórico de funcionalidades
-
-4. **Melhorias de Performance e UX** 🚧
+1. **Performance e UX** 🚧
    - Otimizar prompts para gerar tasks mais acionáveis
    - Implementar templates específicos por categoria
    - Adicionar validação de qualidade das respostas da IA
+
+2. **Funcionalidades Avançadas** 🚧
+   - Sistema de notificações e lembretes
+   - Compartilhamento de listas entre usuários
+   - Integrações com outras ferramentas de produtividade
+
+3. **Deploy e Produção** 🚧
+   - Configurar ambiente de produção
+   - Implementar monitoramento e analytics
+   - Otimizações específicas para mobile
 
 ## 🎉 Status do MVP - CONCLUÍDO
 
@@ -267,27 +271,24 @@ O **MVP (Minimum Viable Product)** da aplicação AI-Powered Todo App foi **conc
 - ~~**Interface responsiva** e experiência de usuário otimizada~~ ✅ **Concluído**
 - ~~**Documentação técnica** completa e detalhada~~ ✅ **Concluído**
 
-### 🚀 Próximos Passos - Evolução do Produto
+### 🚀 Funcionalidades Implementadas
 
-#### **Fase 1: Organização e Qualidade** (Próximas 2-4 semanas)
-- **Processos de Desenvolvimento**: Implementar GitFlow e code review
-- **Testes Automatizados**: Garantir qualidade e confiabilidade
-- **CI/CD Pipeline**: Deploy automatizado e validação contínua
+#### **Core Features**
+- **🎯 Geração Inteligente**: Sistema completo de geração de tarefas via IA
+- **📝 Gerenciamento Manual**: CRUD completo para criação manual de tarefas
+- **🔑 Configuração de IA**: Interface para configurar API Keys (Hugging Face/OpenRouter)
+- **👤 Autenticação**: Sistema de usuários com sessão segura
+- **📱 Design Responsivo**: Interface adaptável para desktop e mobile
 
-#### **Fase 2: Melhorias de Produto** (Próximos 1-2 meses)
-- **Performance**: Otimizações para melhor experiência do usuário
-- **Mobile**: Melhorias específicas para dispositivos móveis
-- **Analytics**: Dashboard de métricas e produtividade do usuário
-
-#### **Fase 3: Funcionalidades Avançadas** (Próximos 2-3 meses)
-- **Notificações**: Sistema de lembretes inteligentes
-- **Colaboração**: Compartilhamento de listas entre usuários
-- **Integrações**: Conectores com outras ferramentas de produtividade
-
-> 📋 **Documentação Técnica Completa**: Para detalhes sobre DevOps, CI/CD, GitFlow e processos técnicos, consulte [DevOps Strategy](./docs/devops-strategy.md)
+#### **Arquitetura Técnica**
+- **🏗️ Atomic Design**: Componentes escaláveis e reutilizáveis
+- **⚡ Performance**: Next.js 14 com App Router otimizado
+- **🔒 TypeScript**: Tipagem estática completa
+- **📚 Documentação**: Swagger/OpenAPI para API REST
+- **🗄️ Banco de Dados**: SQLite com Prisma ORM
 
 ### 📋 Roadmap Futuro
-- **🚀 Deploy**: Configurar CI/CD e deploy em produção
+- **🚀 Deploy**: Configurar deploy em produção
 - **📱 Mobile**: Otimizações específicas para mobile
 - **🔔 Notificações**: Sistema de lembretes e notificações
 - **📊 Analytics**: Dashboard de produtividade e métricas
@@ -321,7 +322,6 @@ O **MVP (Minimum Viable Product)** da aplicação AI-Powered Todo App foi **conc
 
 - **[Desafio](./docs/desafio.md)** - Especificações completas do teste técnico
 - **[Solução](./docs/solucao.md)** - Arquitetura e abordagem da solução
-- **[DevOps Strategy](./docs/devops-strategy.md)** - Estratégia completa de DevOps, CI/CD e GitFlow
 - **[Backend API](./apps/backend/API.md)** - Documentação completa da API
 - **[Backend README](./apps/backend/README.md)** - Guia técnico do backend
 - **[Frontend README](./apps/frontend/README.md)** - Documentação da interface Next.js
