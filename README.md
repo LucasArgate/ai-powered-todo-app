@@ -25,10 +25,13 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 - ✅ **LangChain**: Biblioteca especializada para integração com LLMs (IA)
 - ✅ **Swagger + OpenAPI**: Documentação técnica e compatibilidade com MCP servers
 
-**Frontend (Next.js + TypeScript)**
-- ✅ **Next.js**: Framework React para interfaces modernas e rápidas
-- ✅ **TypeScript**: Consistência com o backend
-- ✅ **Interface reativa**: Atualizações em tempo real sem recarregar página
+**Frontend (Next.js + TypeScript + Atomic Design)**
+- ✅ **Next.js 14**: Framework React moderno com App Router para performance otimizada
+- ✅ **TypeScript**: Tipagem estática completa para código mais seguro e manutenível
+- ✅ **Atomic Design**: Arquitetura de componentes escalável e reutilizável
+- ✅ **Tailwind CSS**: Sistema de design consistente e responsivo
+- ✅ **Interface Reativa**: Atualizações em tempo real sem recarregar página
+- ✅ **State Management**: Hook customizado para gerenciamento de estado centralizado
 
 ## 📁 Estrutura do Projeto
 
@@ -46,9 +49,11 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 
 ### 📚 Documentação Técnica
 
-- **[Backend README](./apps/backend/README.md)** - Documentação completa da API
-- **[API Documentation](./apps/backend/API.md)** - Especificação detalhada dos endpoints
-- **[Frontend README](./apps/frontend/README.md)** - Documentação da interface
+- **[Backend README](./apps/backend/README.md)** - Documentação completa da API NestJS
+- **[API Documentation](./apps/backend/API.md)** - Especificação detalhada dos endpoints REST
+- **[Frontend README](./apps/frontend/README.md)** - Documentação da interface Next.js com Atomic Design
+- **[Frontend Setup](./apps/frontend/SETUP.md)** - Guia de configuração e resolução de problemas
+- **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
 
 ## 🛠️ Como executar a aplicação
 
@@ -103,6 +108,7 @@ pnpm start        # Executa em produção
 - ✅ **Controle de progresso** - Marque tarefas como concluídas
 - 🔄 **Atualizações em tempo real** - Interface sempre sincronizada
 - 🔑 **Integração com IA** - Use sua própria API Key (Hugging Face/OpenRouter)
+- 📱 **Design responsivo** - Funciona perfeitamente em desktop e mobile
 
 ### Para Desenvolvedores
 - 🚀 **API REST completa** - Endpoints bem documentados e testáveis
@@ -110,6 +116,8 @@ pnpm start        # Executa em produção
 - 🔒 **Autenticação segura** - Bearer Token para controle de acesso
 - 🗄️ **Banco de dados robusto** - SQLite com Prisma ORM
 - 🤖 **Integração IA avançada** - LangChain para múltiplos provedores
+- 🏗️ **Arquitetura escalável** - Atomic Design para componentes reutilizáveis
+- ⚡ **Performance otimizada** - Next.js 14 com App Router e build otimizado
 
 ## 🤖 Como funciona a IA?
 
@@ -122,6 +130,36 @@ pnpm start        # Executa em produção
 ### Provedores de IA suportados:
 - **Hugging Face** - Opção gratuita para testes
 - **OpenRouter** - Acesso a múltiplos modelos LLM (GPT, Claude, etc.)
+
+## 🏗️ Arquitetura do Frontend (Atomic Design)
+
+### Metodologia Atomic Design
+O frontend foi desenvolvido seguindo os princípios do **Atomic Design** de Brad Frost, criando uma arquitetura de componentes escalável e reutilizável:
+
+```
+📦 Componentes
+├── 🔬 Atoms (Elementos básicos)
+│   ├── Button, Input, Checkbox, Card, LoadingSpinner
+│   └── Componentes indivisíveis e reutilizáveis
+├── 🧬 Molecules (Combinações simples)
+│   ├── TaskItem, TaskForm, AIForm, TaskListHeader
+│   └── Combinações de atoms com funcionalidade específica
+├── 🦠 Organisms (Componentes complexos)
+│   ├── TaskList, TaskListSelector, AISettings
+│   └── Seções funcionais completas da interface
+├── 📄 Templates (Layouts de página)
+│   ├── MainLayout, TaskListTemplate
+│   └── Estruturas de página sem conteúdo específico
+└── 📱 Pages (Páginas completas)
+    └── Implementações específicas dos templates
+```
+
+### Benefícios da Arquitetura:
+- **🔄 Reutilização**: Componentes atômicos podem ser reutilizados em qualquer lugar
+- **🧪 Testabilidade**: Cada componente pode ser testado isoladamente
+- **📈 Escalabilidade**: Fácil adição de novas funcionalidades
+- **🎨 Consistência**: Design system unificado em toda a aplicação
+- **⚡ Performance**: Componentes otimizados e lazy loading
 
 ## 📊 Como os dados são organizados
 
@@ -147,16 +185,43 @@ Usuário
 - ~~Integrar com provedores de IA~~ ✅ **Concluído**
 - ~~Documentação técnica completa~~ ✅ **Concluído**
 
+### ✅ Concluído
+- ~~Desenvolver a interface Next.js~~ ✅ **Concluído**
+- ~~Conectar frontend com backend~~ ✅ **Concluído**
+- ~~Implementar interface de usuário moderna~~ ✅ **Concluído**
+
 ### 🚧 Em desenvolvimento
-- Desenvolver a interface Next.js
-- Conectar frontend com backend
 - Testes de integração
+- Otimizações de performance
 
 ### 📋 Próximos passos
-- Implementar interface de usuário moderna
 - Adicionar testes automatizados
 - Deploy em ambiente de produção
-- Otimizações de performance
+- Melhorias de UX/UI
+
+## 🛠️ Tecnologias e Padrões Utilizados
+
+### Backend (NestJS)
+- **Arquitetura**: Domain-Driven Design (DDD) com módulos bem definidos
+- **ORM**: Prisma com SQLite para desenvolvimento e portabilidade
+- **Validação**: Class-validator e class-transformer para DTOs
+- **Documentação**: Swagger/OpenAPI para documentação automática
+- **IA**: LangChain para integração com múltiplos provedores LLM
+
+### Frontend (Next.js + Atomic Design)
+- **Framework**: Next.js 14 com App Router para performance otimizada
+- **Arquitetura**: Atomic Design para componentes escaláveis e reutilizáveis
+- **Styling**: Tailwind CSS com design system customizado
+- **State Management**: Custom hooks para gerenciamento de estado
+- **TypeScript**: Tipagem estática completa para maior segurança
+- **API Client**: Axios com interceptors para tratamento de erros
+
+### Padrões de Desenvolvimento
+- **Monorepo**: Workspace com pnpm para gerenciamento de dependências
+- **TypeScript**: Tipagem estática em toda a aplicação
+- **ESLint**: Linting consistente para qualidade de código
+- **Componentização**: Arquitetura baseada em componentes reutilizáveis
+- **Responsive Design**: Interface adaptável para todos os dispositivos
 
 ## 📄 Documentação Técnica
 
@@ -165,3 +230,29 @@ Usuário
 - **[Backend API](./apps/backend/API.md)** - Documentação completa da API
 - **[Backend README](./apps/backend/README.md)** - Guia técnico do backend
 - **[TDD Strategy](./docs/tdd-strategy.md)** - Estratégia TDD e CI/CD documentada (posterior ao front)
+
+## 🎯 Destaques Técnicos para Avaliação
+
+### Arquitetura e Design Patterns
+- **🏗️ Atomic Design**: Implementação completa da metodologia de Brad Frost
+- **📦 Monorepo**: Estrutura organizada com workspace e dependências otimizadas
+- **🔄 Componentização**: Sistema de componentes reutilizáveis e escaláveis
+- **📱 Responsive Design**: Interface adaptável para todos os dispositivos
+
+### Qualidade de Código
+- **🔒 TypeScript**: Tipagem estática completa em frontend e backend
+- **📏 ESLint**: Linting consistente e configurações otimizadas
+- **📚 Documentação**: READMEs detalhados e documentação técnica completa
+- **🎨 Design System**: Sistema de design consistente com Tailwind CSS
+
+### Performance e Otimização
+- **⚡ Next.js 14**: App Router para performance otimizada
+- **📦 Build Otimizado**: Bundle otimizado para produção (28kB página principal)
+- **🔄 State Management**: Gerenciamento de estado eficiente com custom hooks
+- **📡 API Client**: Cliente HTTP otimizado com interceptors e tratamento de erros
+
+### Integração e Funcionalidades
+- **🤖 IA Integration**: Integração com múltiplos provedores (Hugging Face, OpenRouter)
+- **🔄 Real-time**: Atualizações em tempo real sem recarregar página
+- **🔐 Session Management**: Gerenciamento de sessão seguro com localStorage
+- **📊 Data Management**: CRUD completo com validação e tratamento de erros
