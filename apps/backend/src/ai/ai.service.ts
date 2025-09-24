@@ -16,7 +16,7 @@ export class AiService {
   ) {}
 
   async generateTasksFromPrompt(dto: GenerateTasksDto): Promise<any[]> {
-    const { prompt, apiKey, provider = 'openrouter' } = dto;
+    const { prompt, apiKey, provider = 'huggingface' } = dto;
     
     try {
       // Mapear provider para LLMProvider
@@ -44,7 +44,6 @@ export class AiService {
           listId: 'default-list', // TODO: Implement proper list management
           title: taskData.title,
           position: i,
-          description: taskData.description,
         });
         savedTasks.push(task);
       }
@@ -62,13 +61,11 @@ export class AiService {
    */
   private mapProvider(provider: string): LLMProvider {
     const providerMap: Record<string, LLMProvider> = {
-      'huggingface': 'openrouter', // Migrar HuggingFace para OpenRouter
+      'huggingface': 'huggingface',
       'openrouter': 'openrouter',
-      'openai': 'openai',
-      'anthropic': 'anthropic',
     };
     
-    return providerMap[provider] || 'openrouter';
+    return providerMap[provider] || 'huggingface';
   }
 
 

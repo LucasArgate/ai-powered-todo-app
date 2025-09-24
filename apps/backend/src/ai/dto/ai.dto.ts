@@ -20,14 +20,14 @@ export class GenerateTasksDto {
   apiKey?: string;
 
   @ApiPropertyOptional({
-    description: 'Provedor de IA a ser utilizado',
-    enum: ['huggingface', 'openrouter', 'openai', 'anthropic'],
-    example: 'openrouter',
-    default: 'openrouter',
+    description: 'Provedor de IA a ser utilizado (apenas gratuitos)',
+    enum: ['huggingface', 'openrouter'],
+    example: 'huggingface',
+    default: 'huggingface',
   })
   @IsOptional()
-  @IsEnum(['huggingface', 'openrouter', 'openai', 'anthropic'])
-  provider?: 'huggingface' | 'openrouter' | 'openai' | 'anthropic';
+  @IsEnum(['huggingface', 'openrouter'])
+  provider?: 'huggingface' | 'openrouter';
 
   @ApiPropertyOptional({
     description: 'Modelo específico do provedor',
@@ -74,11 +74,11 @@ export class AiConfigDto {
   apiKey: string;
 
   @ApiProperty({
-    description: 'Provedor de IA',
-    enum: ['huggingface', 'openrouter', 'openai', 'anthropic'],
-    example: 'openrouter',
+    description: 'Provedor de IA (apenas gratuitos)',
+    enum: ['huggingface', 'openrouter'],
+    example: 'huggingface',
   })
   @IsString()
   @IsNotEmpty()
-  provider: 'huggingface' | 'openrouter' | 'openai' | 'anthropic';
+  provider: 'huggingface' | 'openrouter';
 }

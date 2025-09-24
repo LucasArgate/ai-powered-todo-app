@@ -14,7 +14,7 @@ export const TaskArraySchema = z.array(TaskSchema);
 export type TaskSuggestion = z.infer<typeof TaskSchema>;
 
 // Parser estruturado para respostas JSON das tarefas
-export const taskParser = StructuredOutputParser.fromZodSchema(TaskArraySchema);
+export const taskParser = StructuredOutputParser.fromZodSchema(TaskArraySchema as any);
 
 // Template de prompt estruturado
 export const TASK_GENERATION_PROMPT = `

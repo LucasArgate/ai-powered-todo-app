@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { ChatOpenAI } from '@langchain/openai';
-import { ChatAnthropic } from '@langchain/anthropic';
+import { HfInference } from '@huggingface/inference';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { taskParser, TASK_GENERATION_PROMPT, TaskSuggestion } from '../parsers/task.parser';
@@ -10,7 +10,7 @@ interface RetryConfig {
   retryDelay: number;
 }
 
-export type LLMProvider = 'openai' | 'anthropic' | 'openrouter';
+export type LLMProvider = 'huggingface' | 'openrouter';
 
 export interface LLMConfig {
   provider: LLMProvider;
@@ -49,7 +49,7 @@ export class LangChainService {
         const result = await chain.invoke({
           goal,
           format_instructions: taskParser.getFormatInstructions(),
-        });
+        }) as TaskSuggestion[];
 
         this.logger.log(`Generated ${result.length} tasks using ${config.provider}`);
         return result;
@@ -108,17 +108,9 @@ export class LangChainService {
       };
 
       switch (config.provider) {
-        case 'openai':
-          return new ChatOpenAI({
-            ...baseConfig,
-            model: config.model ?? 'gpt-3.5-turbo',
-          });
-
-        case 'anthropic':
-          return new ChatAnthropic({
-            ...baseConfig,
-            model: config.model ?? 'claude-3-haiku-20240307',
-          });
+        case 'huggingface':
+          // Para Hugging Face, vamos usar uma abordagem híbrida
+          return this.createHuggingFaceModel(config);
 
         case 'openrouter':
           // OpenRouter usa API compatível com OpenAI
@@ -138,7 +130,9 @@ export class LangChainService {
           throw new BadRequestException(`Unsupported provider: ${config.provider}`);
       }
     } catch (error) {
+
       this.logger.error(`Failed to create LLM model for ${config.provider}:`, error.message);
+      
       throw new BadRequestException(`Failed to initialize ${config.provider} model: ${error.message}`);
     }
   }
@@ -147,7 +141,44 @@ export class LangChainService {
    * Cria o template de prompt estruturado
    */
   private createPromptTemplate(): PromptTemplate {
+
     return PromptTemplate.fromTemplate(TASK_GENERATION_PROMPT);
+  }
+
+  /**
+   * Cria um wrapper para Hugging Face que simula a interface do LangChain
+   */
+  private createHuggingFaceModel(config: LLMConfig) {
+    const hf = new HfInference(config.apiKey);
+    const model = config.model ?? 'microsoft/DialoGPT-medium';
+
+    return {
+      async invoke(input: { goal: string; format_instructions: string }): Promise<{ content: string }> {
+        try {
+          const prompt = `You are a task management assistant. Given a high-level goal or objective, break it down into specific, actionable tasks.
+
+${input.format_instructions}
+
+Goal: ${input.goal}
+
+Return ONLY the JSON array of tasks as specified in the format instructions.`;
+
+          const response = await hf.textGeneration({
+            model,
+            inputs: prompt,
+            parameters: {
+              max_new_tokens: config.maxTokens ?? 500,
+              temperature: config.temperature ?? 0.7,
+              return_full_text: false,
+            },
+          });
+
+          return { content: response.generated_text || '' };
+        } catch (error) {
+          throw new Error(`Hugging Face API error: ${error.message}`);
+        }
+      },
+    };
   }
 
   /**
@@ -156,19 +187,14 @@ export class LangChainService {
   getAvailableProviders(): { name: LLMProvider; description: string; free: boolean }[] {
     return [
       {
-        name: 'openai',
-        description: 'OpenAI GPT models - Paid service',
-        free: false,
-      },
-      {
-        name: 'anthropic',
-        description: 'Anthropic Claude models - Paid service',
-        free: false,
+        name: 'huggingface',
+        description: 'Hugging Face Inference API - Free tier available',
+        free: true,
       },
       {
         name: 'openrouter',
-        description: 'OpenRouter - Access to multiple LLMs',
-        free: false,
+        description: 'OpenRouter - Some free models available',
+        free: true,
       },
     ];
   }
@@ -177,11 +203,13 @@ export class LangChainService {
    * Valida a configuração do provedor
    */
   validateConfig(config: LLMConfig): boolean {
+
     if (!config.apiKey || config.apiKey.trim().length === 0) {
       throw new BadRequestException('API key is required');
     }
 
     const supportedProviders = this.getAvailableProviders().map(p => p.name);
+
     if (!supportedProviders.includes(config.provider)) {
       throw new BadRequestException(`Unsupported provider: ${config.provider}`);
     }

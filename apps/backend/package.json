@@ -24,6 +24,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@huggingface/inference": "^4.8.0",
     "@langchain/anthropic": "^0.3.28",
     "@langchain/core": "^0.3.77",
     "@langchain/openai": "^0.6.13",
