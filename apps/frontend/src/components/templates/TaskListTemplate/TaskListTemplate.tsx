@@ -20,7 +20,6 @@ export interface TaskListTemplateProps {
   onCancelTaskListEdit?: () => void;
   onDeleteTaskList?: (taskListId: string) => void;
   onGenerateFromAI: (listName: string, prompt: string) => void;
-  onConfigureAI?: () => void;
 }
 
 const TaskListTemplate: React.FC<TaskListTemplateProps> = ({
@@ -38,11 +37,10 @@ const TaskListTemplate: React.FC<TaskListTemplateProps> = ({
   onCancelTaskListEdit,
   onDeleteTaskList,
   onGenerateFromAI,
-  onConfigureAI,
 }) => {
   if (!taskList) {
     return (
-      <MainLayout user={user} onConfigureAI={onConfigureAI}>
+      <MainLayout user={user}>
         <div className="text-center py-12">
           <h2 className="text-2xl font-semibold text-secondary-900 mb-4">
             Nenhuma Lista de Tarefas Selecionada
@@ -56,7 +54,7 @@ const TaskListTemplate: React.FC<TaskListTemplateProps> = ({
   }
 
   return (
-    <MainLayout user={user} onConfigureAI={onConfigureAI}>
+    <MainLayout user={user}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Task List */}
         <div className="lg:col-span-2">
@@ -90,7 +88,6 @@ const TaskListTemplate: React.FC<TaskListTemplateProps> = ({
             onSubmit={onGenerateFromAI}
             isLoading={isLoading}
             aiIntegrationType={user?.aiIntegrationType}
-            onConfigureAI={onConfigureAI}
           />
         </div>
       </div>

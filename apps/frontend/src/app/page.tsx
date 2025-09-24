@@ -6,11 +6,11 @@ import { useReduxTaskList } from '@/hooks/useReduxTaskList';
 import MainLayout from '@/components/templates/MainLayout/MainLayout';
 import TaskListSelector from '@/components/organisms/TaskListSelector/TaskListSelector';
 import TaskListTemplate from '@/components/templates/TaskListTemplate/TaskListTemplate';
-import AISettings from '@/components/organisms/AISettings/AISettings';
-import WelcomeCard from '@/components/organisms/WelcomeCard/WelcomeCard';
+import WelcomeCard, { TaskPreview } from '@/components/organisms/WelcomeCard/WelcomeCard';
 import Card from '@/components/atoms/Card/Card';
 import Button from '@/components/atoms/Button/Button';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
+import { apiClient } from '@/lib/api';
 
 export default function HomePage() {
   const {
@@ -40,7 +40,6 @@ export default function HomePage() {
   const isLoading = authLoading || taskListLoading;
   const error = authError || taskListError;
 
-  const [showAISettings, setShowAISettings] = useState(false);
   const [showCreateListForm, setShowCreateListForm] = useState(false);
   const [newListName, setNewListName] = useState('');
   const [newListDescription, setNewListDescription] = useState('');
@@ -76,16 +75,23 @@ export default function HomePage() {
     }
   };
 
-  const handleUpdateUser = async (userData: any) => {
-    try {
-      await updateUser(userData);
-      setShowAISettings(false);
-      // Com Redux, o estado global é atualizado automaticamente
-      // O header será re-renderizado com o novo nome do usuário
-    } catch (error) {
-      console.error('Erro ao atualizar usuário:', error);
-    }
+  const handleGeneratePreview = async (prompt: string): Promise<TaskPreview[]> => {
+    if (!user) throw new Error('Usuário não encontrado');
+    
+    const tasks = await apiClient.generateTasksPreview({ 
+      listName: 'Preview', 
+      prompt: prompt.trim() 
+    });
+    
+    // Convert API response to TaskPreview format
+    return tasks.map((task: any) => ({
+      title: task.title,
+      description: task.description,
+      priority: task.priority || 'medium',
+      category: task.category
+    }));
   };
+
 
   const handleEditTaskList = (taskList: any) => {
     setIsEditingHeader(true);
@@ -146,7 +152,7 @@ export default function HomePage() {
 
   if (error) {
     return (
-      <MainLayout user={user} onConfigureAI={() => setShowAISettings(true)}>
+      <MainLayout user={user}>
         <Card className="max-w-md mx-auto text-center">
           <div className="text-red-600 mb-4">
             <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,23 +167,9 @@ export default function HomePage() {
     );
   }
 
-  if (showAISettings) {
-    return (
-      <MainLayout user={user} onConfigureAI={() => setShowAISettings(false)}>
-        <div className="max-w-2xl mx-auto">
-          <AISettings
-            user={user!}
-            onUpdateUser={handleUpdateUser}
-            isLoading={isLoading}
-          />
-        </div>
-      </MainLayout>
-    );
-  }
-
   if (showCreateListForm) {
     return (
-      <MainLayout user={user} onConfigureAI={() => setShowAISettings(true)}>
+      <MainLayout user={user}>
         <div className="max-w-md mx-auto">
           <Card>
             <h2 className="text-xl font-semibold text-secondary-900 mb-4">
@@ -250,13 +242,12 @@ export default function HomePage() {
         onCancelTaskListEdit={handleCancelTaskListEdit}
         onDeleteTaskList={handleDeleteTaskList}
         onGenerateFromAI={handleGenerateFromAI}
-        onConfigureAI={() => setShowAISettings(true)}
       />
     );
   }
 
   return (
-    <MainLayout user={user} onConfigureAI={() => setShowAISettings(true)}>
+    <MainLayout user={user}>
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
         <div className="lg:col-span-4">
           <TaskListSelector
@@ -265,6 +256,9 @@ export default function HomePage() {
             onSelectTaskList={handleSelectTaskList}
             onCreateNewList={handleCreateNewList}
             onDeleteTaskList={handleDeleteTaskList}
+            onAddTask={async (taskListId: string, title: string) => {
+              await addTask(taskListId, title);
+            }}
           />
         </div>
         
@@ -273,8 +267,8 @@ export default function HomePage() {
             user={user}
             isLoading={isLoading}
             onCreateManualList={handleCreateNewList}
-            onConfigureAI={() => setShowAISettings(true)}
             onGenerateWithAI={handleGenerateWithAI}
+            onGeneratePreview={handleGeneratePreview}
           />
         </div>
       </div>

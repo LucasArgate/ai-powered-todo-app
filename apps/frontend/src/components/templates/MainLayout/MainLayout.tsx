@@ -1,17 +1,16 @@
 import React from 'react';
 import { User } from '@/types';
 import { Settings } from 'lucide-react';
+import Link from 'next/link';
 
 export interface MainLayoutProps {
   children: React.ReactNode;
   user: User | null;
-  onConfigureAI?: () => void;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({
   children,
   user,
-  onConfigureAI,
 }) => {
   return (
     <div className="min-h-screen bg-secondary-50 flex flex-col">
@@ -20,9 +19,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-primary-600">
+              <Link href="/" className="text-xl font-bold text-primary-600 hover:text-primary-700 transition-colors">
                 Smart Todo List
-              </h1>
+              </Link>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -31,16 +30,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                   {user.name || 'Usuário Anônimo'}
                 </div>
               )}
-              {onConfigureAI && (
-                <button
-                  onClick={onConfigureAI}
-                  className="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 transition-colors"
-                  title="Configurações"
-                >
-                  <Settings size={16} />
-                  Configurações
-                </button>
-              )}
+              <Link
+                href="/configuracoes"
+                className="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 transition-colors"
+                title="Configurações"
+              >
+                <Settings size={16} />
+                Configurações
+              </Link>
             </div>
           </div>
         </div>

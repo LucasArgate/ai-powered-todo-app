@@ -3,19 +3,18 @@ import Input from '@/components/atoms/Input/Input';
 import Textarea from '@/components/atoms/Textarea/Textarea';
 import Button from '@/components/atoms/Button/Button';
 import Card from '@/components/atoms/Card/Card';
+import Link from 'next/link';
 
 export interface AIFormProps {
   onSubmit: (listName: string, prompt: string) => void;
   isLoading?: boolean;
   aiIntegrationType?: 'huggingface' | 'openrouter';
-  onConfigureAI?: () => void;
 }
 
 const AIForm: React.FC<AIFormProps> = ({
   onSubmit,
   isLoading = false,
   aiIntegrationType,
-  onConfigureAI,
 }) => {
   const [listName, setListName] = React.useState('');
   const [prompt, setPrompt] = React.useState('');
@@ -47,13 +46,14 @@ const AIForm: React.FC<AIFormProps> = ({
           <p className="text-sm text-yellow-800 mb-2">
             Você precisa configurar seu provedor de IA primeiro.
           </p>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={onConfigureAI}
-          >
-            Configurar IA
-          </Button>
+          <Link href="/configuracoes">
+            <Button
+              variant="secondary"
+              size="sm"
+            >
+              Configurar IA
+            </Button>
+          </Link>
         </div>
       )}
 
