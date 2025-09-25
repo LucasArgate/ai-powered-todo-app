@@ -17,7 +17,7 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 
 <div align="center">
 
-[![Preview da Aplicação](https://img.youtube.com/vi/RERg1lXD5fc/maxresdefault.jpg)](https://www.youtube.com/watch?v=RERg1lXD5fc)
+[![Preview da Aplicação](https://img.youtube.com/vi/4KOydEUjCdo/maxresdefault.jpg)](https://www.youtube.com/watch?v=4KOydEUjCdo)
 
 *Clique na imagem para assistir ao preview da aplicação em ação! Interface moderna, geração inteligente de tarefas e experiência de usuário otimizada.*
 
