@@ -55,9 +55,9 @@ export const createTaskList = createAsyncThunk(
 
 export const generateFromAI = createAsyncThunk(
   'taskList/generateFromAI',
-  async ({ listName, prompt }: { listName: string; prompt: string }, { rejectWithValue }) => {
+  async ({ listName, prompt, description }: { listName: string; prompt: string; description?: string }, { rejectWithValue }) => {
     try {
-      const newTaskList = await apiClient.generateFromAI({ listName, prompt });
+      const newTaskList = await apiClient.generateFromAI({ listName, prompt, description });
       return newTaskList;
     } catch (error) {
       return rejectWithValue('Falha ao gerar tarefas da IA');

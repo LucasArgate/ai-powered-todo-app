@@ -43,11 +43,20 @@ export class TaskResponseDto {
   @ApiProperty({ description: 'Título da tarefa' })
   title: string;
 
+  @ApiPropertyOptional({ description: 'Descrição da tarefa' })
+  description?: string;
+
   @ApiProperty({ description: 'Status de conclusão' })
   isCompleted: boolean;
 
   @ApiProperty({ description: 'Posição na lista' })
   position: number;
+
+  @ApiProperty({ description: 'Prioridade da tarefa', enum: ['low', 'medium', 'high'] })
+  priority: string;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa' })
+  category?: string;
 
   @ApiProperty({ description: 'Data de criação' })
   createdAt: Date;

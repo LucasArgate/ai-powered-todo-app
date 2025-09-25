@@ -21,6 +21,10 @@ export class AiService {
     return this.taskGenerationService.generateTaskListFromPrompt(userId, dto);
   }
 
+  async generateTaskListPreview(userId: string, dto: GenerateTasksDto): Promise<{ name: string; description: string; tasks: any[] }> {
+    return this.taskGenerationService.generateTaskListPreview(userId, dto);
+  }
+
   async getAvailableProviders(): Promise<{ name: string; description: string; free: boolean }[]> {
     return this.providerService.getAvailableProviders();
   }

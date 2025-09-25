@@ -34,8 +34,11 @@ export class TasksService {
       data: {
         listId: createTaskDto.listId,
         title: createTaskDto.title,
+        description: createTaskDto.description,
         position: position,
         isCompleted: createTaskDto.isCompleted ?? false,
+        priority: createTaskDto.priority ?? 'medium',
+        category: createTaskDto.category,
       },
     });
   }

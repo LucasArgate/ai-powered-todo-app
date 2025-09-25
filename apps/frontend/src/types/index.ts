@@ -23,8 +23,11 @@ export interface TaskList {
 export interface Task {
   id: string;
   title: string;
+  description?: string;
   isCompleted: boolean;
   position: number;
+  priority: 'low' | 'medium' | 'high';
+  category?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -47,8 +50,9 @@ export interface CreateTaskListRequest {
 }
 
 export interface GenerateFromAIRequest {
-  listName: string;
+  listName?: string;
   prompt: string;
+  description?: string;
 }
 
 export interface UpdateTaskListRequest {
@@ -58,13 +62,19 @@ export interface UpdateTaskListRequest {
 
 export interface CreateTaskRequest {
   title: string;
+  description?: string;
   position: number;
+  priority?: 'low' | 'medium' | 'high';
+  category?: string;
 }
 
 export interface UpdateTaskRequest {
   title?: string;
+  description?: string;
   isCompleted?: boolean;
   position?: number;
+  priority?: 'low' | 'medium' | 'high';
+  category?: string;
 }
 
 // UI State types

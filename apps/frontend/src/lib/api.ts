@@ -103,11 +103,15 @@ class ApiClient {
     return response.data;
   }
 
-  async generateTasksPreview(data: GenerateFromAIRequest): Promise<any[]> {
-    const response = await this.client.post('/ai/generate-tasks', data, {
+  async generateTasksPreview(data: GenerateFromAIRequest): Promise<{ listName: string; listDescription: string; tasks: any[] }> {
+    const response = await this.client.post('/ai/generate-tasklist-preview', data, {
       headers: this.getHeaders(),
     });
-    return response.data;
+    return {
+      listName: response.data.name,
+      listDescription: response.data.description,
+      tasks: response.data.tasks
+    };
   }
 
   async updateTaskList(listId: string, data: UpdateTaskListRequest): Promise<TaskList> {

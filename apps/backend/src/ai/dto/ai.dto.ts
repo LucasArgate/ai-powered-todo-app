@@ -20,6 +20,14 @@ export class GenerateTasksDto {
   listName?: string;
 
   @ApiPropertyOptional({
+    description: 'Descrição personalizada para a lista de tarefas (se não fornecida, será gerada automaticamente)',
+    example: 'Planejamento completo para uma viagem ao Japão',
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiPropertyOptional({
     description: 'Provedor de IA a ser utilizado',
     enum: ['huggingface', 'openrouter', 'gemini'],
     example: 'huggingface',

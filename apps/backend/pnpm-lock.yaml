@@ -53,6 +53,9 @@ importers:
       class-validator:
         specifier: ^0.14.0
         version: 0.14.2
+      langchain:
+        specifier: ^0.3.34
+        version: 0.3.34(@langchain/anthropic@0.3.28(@langchain/core@0.3.77(openai@5.12.2(ws@8.18.3)(zod@4.1.11))))(@langchain/core@0.3.77(openai@5.12.2(ws@8.18.3)(zod@4.1.11)))(@langchain/google-genai@0.2.18(@langchain/core@0.3.77(openai@5.12.2(ws@8.18.3)(zod@4.1.11))))(axios@1.12.2)(handlebars@4.7.8)(openai@5.12.2(ws@8.18.3)(zod@4.1.11))(ws@8.18.3)
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14

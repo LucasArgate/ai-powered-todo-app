@@ -66,7 +66,10 @@ export class TaskGenerationService {
         const task = await this.tasksService.create({
           listId: taskListId,
           title: taskData.title,
+          description: taskData.description,
           position: i,
+          priority: taskData.priority,
+          category: taskData.category,
         }, userId);
         savedTasks.push(task);
       }
@@ -109,9 +112,9 @@ export class TaskGenerationService {
       const config = this.createLLMConfig(user, dto, llmProvider);
       this.langChainService.validateConfig(config);
       
-      // Use provided listName or generate title and description using AI
+      // Use provided listName/description or generate using AI
       const listTitle = listName || await this.generateListTitle(prompt, config);
-      const listDescription = await this.generateListDescription(prompt, config);
+      const listDescription = dto.description || await this.generateListDescription(prompt, config);
       
       // Create the TaskList
       const taskList = await this.taskListsService.create({
@@ -131,7 +134,10 @@ export class TaskGenerationService {
         const task = await this.tasksService.create({
           listId: taskList.id, // Use the created list ID
           title: taskData.title,
+          description: taskData.description,
           position: i,
+          priority: taskData.priority,
+          category: taskData.category,
         }, userId);
         savedTasks.push(task);
       }
@@ -197,6 +203,56 @@ export class TaskGenerationService {
     } catch (error) {
       this.logger.warn('Failed to generate list description, using fallback');
       return `Lista de tarefas gerada para: ${prompt}`;
+    }
+  }
+
+  /**
+   * Generates a task list preview without saving to database
+   */
+  async generateTaskListPreview(userId: string, dto: GenerateTasksDto): Promise<{ name: string; description: string; tasks: any[] }> {
+    const { prompt, listName, provider = 'huggingface' } = dto;
+    
+    try {
+      // Get user data (including API key)
+      const user = await this.usersService.findOne(userId);
+      
+      // Check if user has API key configured
+      if (!user.aiToken) {
+        throw new BadRequestException('User has no AI API key configured. Please configure your AI integration first.');
+      }
+      
+      // Check if user's provider matches the requested one
+      if (user.aiIntegrationType && user.aiIntegrationType !== provider) {
+        this.logger.warn(`User ${userId} has ${user.aiIntegrationType} configured but requested ${provider}`);
+      }
+      
+      // Map provider to LLMProvider
+      const llmProvider = this.mapProvider(provider);
+      
+      // Validate configuration
+      const config = this.createLLMConfig(user, dto, llmProvider);
+      this.langChainService.validateConfig(config);
+      
+      // Use provided listName/description or generate using AI
+      const listTitle = listName || await this.generateListTitle(prompt, config);
+      const listDescription = dto.description || await this.generateListDescription(prompt, config);
+      
+      // Generate tasks using LangChain (without saving to database)
+      const tasks = await this.langChainService.generateTasks(prompt, config);
+      
+      this.logger.log(`Generated TaskList preview "${listTitle}" with ${tasks.length} tasks from prompt: "${prompt}" for user ${userId}`);
+      
+      return {
+        name: listTitle,
+        description: listDescription,
+        tasks: tasks
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.logger.error('Error generating task list preview:', error.message);
+      throw new BadRequestException('Failed to generate task list preview from AI service');
     }
   }
 }

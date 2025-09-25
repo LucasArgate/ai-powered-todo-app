@@ -15,8 +15,8 @@ export interface WelcomeCardProps {
   user: User | null;
   isLoading?: boolean;
   onCreateManualList: () => void;
-  onGenerateWithAI: (prompt: string) => void;
-  onGeneratePreview: (prompt: string) => Promise<TaskPreview[]>;
+  onGenerateWithAI: (prompt: string, listName?: string, listDescription?: string) => void;
+  onGeneratePreview: (prompt: string) => Promise<{ listName: string; listDescription: string; tasks: TaskPreview[] }>;
 }
 
 const WelcomeCard: React.FC<WelcomeCardProps> = ({
@@ -27,7 +27,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({
   onGeneratePreview,
 }) => {
   const [aiPrompt, setAiPrompt] = useState('planejar uma viagem para o Japão');
-  const [previewTasks, setPreviewTasks] = useState<TaskPreview[]>([]);
+  const [previewData, setPreviewData] = useState<{ listName: string; listDescription: string; tasks: TaskPreview[] } | null>(null);
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -35,8 +35,8 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({
     if (aiPrompt.trim()) {
       setIsGeneratingPreview(true);
       try {
-        const tasks = await onGeneratePreview(aiPrompt.trim());
-        setPreviewTasks(tasks);
+        const data = await onGeneratePreview(aiPrompt.trim());
+        setPreviewData(data);
         setShowPreview(true);
       } catch (error) {
         console.error('Erro ao gerar preview:', error);
@@ -47,22 +47,23 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({
   };
 
   const handleApplyPreview = async () => {
-    if (aiPrompt.trim()) {
-      await onGenerateWithAI(aiPrompt.trim());
+    if (previewData) {
+      // Use the generated title and description from preview
+      await onGenerateWithAI(aiPrompt.trim(), previewData.listName, previewData.listDescription);
       setAiPrompt('planejar uma viagem para o Japão'); // Reset to default
       setShowPreview(false);
-      setPreviewTasks([]);
+      setPreviewData(null);
     }
   };
 
   const handleCancelPreview = () => {
     setShowPreview(false);
-    setPreviewTasks([]);
+    setPreviewData(null);
   };
 
   const handleGenerateNewPreview = () => {
     setShowPreview(false);
-    setPreviewTasks([]);
+    setPreviewData(null);
   };
 
   const isAIConfigured = user?.aiIntegrationType && user?.aiToken;
@@ -105,8 +106,23 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({
               <h4 className="text-sm font-medium text-secondary-900 mb-3">
                 Preview das tarefas geradas:
               </h4>
+              
+              {/* List Title and Description */}
+              {previewData && (
+                <div className="mb-4 p-3 bg-primary-50 rounded-md border border-primary-200">
+                  <h5 className="text-sm font-semibold text-primary-900 mb-1">
+                    {previewData.listName}
+                  </h5>
+                  {previewData.listDescription && (
+                    <p className="text-xs text-primary-700">
+                      {previewData.listDescription}
+                    </p>
+                  )}
+                </div>
+              )}
+              
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {previewTasks.map((task, index) => (
+                {previewData?.tasks.map((task, index) => (
                   <div key={index} className="flex items-start gap-2 p-2 bg-secondary-50 rounded-md">
                     <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center text-xs font-medium">
                       {index + 1}

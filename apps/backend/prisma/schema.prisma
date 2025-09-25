@@ -46,8 +46,11 @@ model Task {
   id          String   @id @default(cuid())
   listId      String
   title       String
+  description String?
   isCompleted Boolean  @default(false)
   position    Int
+  priority    String   @default("medium") // low, medium, high
+  category    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

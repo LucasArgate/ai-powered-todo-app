@@ -35,8 +35,8 @@ export const useReduxTaskList = () => {
     return dispatch(createTaskList({ name, description }));
   };
 
-  const handleGenerateFromAI = async (listName: string, prompt: string) => {
-    return dispatch(generateFromAI({ listName, prompt }));
+  const handleGenerateFromAI = async (listName: string, prompt: string, description?: string) => {
+    return dispatch(generateFromAI({ listName, prompt, description }));
   };
 
   const handleUpdateTaskList = async (taskListId: string, name: string, description?: string) => {
