@@ -3,6 +3,8 @@ import { Task, TaskList as TaskListType } from '@/types';
 import TaskItem from '@/components/molecules/TaskItem/TaskItem';
 import TaskForm from '@/components/molecules/TaskForm/TaskForm';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
+import Image from 'next/image';
+import { firstTaskImage } from '@/assets';
 
 export interface TaskListProps {
   taskList: TaskListType;
@@ -56,8 +58,18 @@ const TaskList: React.FC<TaskListProps> = ({
             <LoadingSpinner size="lg" />
           </div>
         ) : sortedTasks.length === 0 ? (
-          <div className="text-center py-8 text-secondary-500">
-            <p>Ainda não há tarefas. Adicione sua primeira tarefa acima!</p>
+          <div className="relative text-center py-8 text-secondary-500">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="relative w-80 h-60 opacity-30">
+                <Image
+                  src={firstTaskImage}
+                  alt="Adicione sua primeira tarefa"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-sm font-medium">Ainda não há tarefas. Adicione sua primeira tarefa acima!</p>
+            </div>
           </div>
         ) : (
           sortedTasks.map((task) => (

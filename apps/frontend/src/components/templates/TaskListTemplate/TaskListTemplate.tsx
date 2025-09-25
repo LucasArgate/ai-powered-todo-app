@@ -4,6 +4,8 @@ import MainLayout from '@/components/templates/MainLayout/MainLayout';
 import TaskListHeader from '@/components/molecules/TaskListHeader/TaskListHeader';
 import TaskList from '@/components/organisms/TaskList/TaskList';
 import AIForm from '@/components/molecules/AIForm/AIForm';
+import Image from 'next/image';
+import { firstTaskImage } from '@/assets';
 
 export interface TaskListTemplateProps {
   user: User | null;
@@ -42,12 +44,24 @@ const TaskListTemplate: React.FC<TaskListTemplateProps> = ({
     return (
       <MainLayout user={user}>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold text-secondary-900 mb-4">
-            Nenhuma Lista de Tarefas Selecionada
-          </h2>
-          <p className="text-secondary-600">
-            Selecione uma lista de tarefas da barra lateral ou crie uma nova.
-          </p>
+          <div className="flex flex-col items-center space-y-6">
+            <div className="relative w-96 h-72 opacity-30">
+              <Image
+                src={firstTaskImage}
+                alt="Selecione uma lista de tarefas"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <div className="space-y-4">
+              <h2 className="text-2xl font-semibold text-secondary-900">
+                Nenhuma Lista de Tarefas Selecionada
+              </h2>
+              <p className="text-secondary-600">
+                Selecione uma lista de tarefas da barra lateral ou crie uma nova.
+              </p>
+            </div>
+          </div>
         </div>
       </MainLayout>
     );

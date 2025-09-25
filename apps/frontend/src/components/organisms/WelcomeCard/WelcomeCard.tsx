@@ -207,7 +207,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({
           </div>
         )
       ) : (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-3">
           <Button
             variant="primary"
             onClick={onCreateManualList}
@@ -218,7 +218,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({
           </Button>
           <Link href="/configuracoes" className="w-full">
             <Button
-              variant="primary"
+              variant="secondary"
               className="w-full"
               size="sm"
             >

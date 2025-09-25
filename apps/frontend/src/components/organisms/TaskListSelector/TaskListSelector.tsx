@@ -5,6 +5,8 @@ import Button from '@/components/atoms/Button/Button';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
 import DropdownMenu, { DropdownMenuItem } from '@/components/atoms/DropdownMenu/DropdownMenu';
 import { Plus, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import { firstTaskImage } from '@/assets';
 
 export interface TaskListSelectorProps {
   taskLists: TaskListType[];
@@ -166,13 +168,23 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
 
       {taskLists.length === 0 ? (
         <Card className="text-center py-8">
-          <p className="text-secondary-500 mb-4">Ainda não há listas de tarefas.</p>
-          <Button
-            variant="primary"
-            onClick={onCreateNewList}
-          >
-            Criar Sua Primeira Lista
-          </Button>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="relative w-80 h-60 opacity-30">
+              <Image
+                src={firstTaskImage}
+                alt="Crie sua primeira lista de tarefas"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <p className="text-secondary-500 mb-4">Ainda não há listas de tarefas.</p>
+            <Button
+              variant="primary"
+              onClick={onCreateNewList}
+            >
+              Criar Sua Primeira Lista
+            </Button>
+          </div>
         </Card>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

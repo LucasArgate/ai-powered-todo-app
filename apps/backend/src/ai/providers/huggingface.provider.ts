@@ -12,8 +12,28 @@ export class HuggingFaceProvider implements IAiProvider {
     'facebook/blenderbot-400M-distill',
     'mistralai/Mistral-7B-Instruct-v0.2',
     'google/flan-t5-large',
-    'microsoft/DialoGPT-small'
+    'microsoft/DialoGPT-small',
+    'meta-llama/Meta-Llama-3-8B-Instruct',
+    'meta-llama/llama-2-70b-chat'
   ];
+
+  /**
+   * Determines if a model requires conversational task instead of text-generation
+   */
+  private requiresConversationalTask(model: string): boolean {
+    const conversationalModels = [
+      'meta-llama/Meta-Llama-3-8B-Instruct',
+      'meta-llama/llama-2-70b-chat',
+      'meta-llama/llama-3.1-8b-instruct',
+      'meta-llama/llama-3.1-70b-instruct',
+      'microsoft/DialoGPT-medium',
+      'microsoft/DialoGPT-large',
+      'microsoft/DialoGPT-small',
+      'facebook/blenderbot-400M-distill'
+    ];
+    
+    return conversationalModels.some(convModel => model.includes(convModel.split('/')[1]));
+  }
 
   async generate(
     prompt: string, 
@@ -31,6 +51,10 @@ export class HuggingFaceProvider implements IAiProvider {
       }
 
       this.logger.log(`Generating text with Hugging Face model: ${model}`);
+      
+      // Check if model requires conversational task
+      const useConversational = this.requiresConversationalTask(model);
+      this.logger.log(`Using task type: ${useConversational ? 'conversational' : 'text-generation'}`);
       
       const llm = new HuggingFaceInference({
         model: model,
@@ -58,6 +82,8 @@ export class HuggingFaceProvider implements IAiProvider {
         throw new BadRequestException('API key inválida ou expirada');
       } else if (error.message.includes('Rate limit')) {
         throw new BadRequestException('Limite de requisições excedido');
+      } else if (error.message.includes('not supported for task')) {
+        throw new BadRequestException(`Modelo "${model}" não é compatível com a tarefa solicitada. Modelos Llama geralmente requerem a tarefa 'conversational' em vez de 'text-generation'. Tente usar um modelo diferente ou verifique a documentação do Hugging Face.`);
       } else {
         throw new BadRequestException(`Falha ao gerar texto usando Hugging Face: ${error.message}`);
       }
@@ -125,6 +151,21 @@ export class HuggingFaceProvider implements IAiProvider {
   }
 
   supportsModel(model: string): boolean {
-    return this.availableModels.includes(model);
+    // Check if it's in the predefined list
+    if (this.availableModels.includes(model)) {
+      return true;
+    }
+    
+    // Check if it's a Llama model (more flexible matching)
+    if (model.includes('meta-llama') || model.includes('llama')) {
+      return true;
+    }
+    
+    // Check if it's a DialoGPT model
+    if (model.includes('DialoGPT') || model.includes('blenderbot')) {
+      return true;
+    }
+    
+    return false;
   }
 }
