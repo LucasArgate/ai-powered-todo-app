@@ -12,6 +12,11 @@ export class CreateTaskDto {
   @IsNotEmpty()
   title: string;
 
+  @ApiProperty({ description: 'Descrição da tarefa', required: false })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
   @ApiProperty({ description: 'Posição da tarefa na lista', required: false })
   @IsNumber()
   @IsOptional()
@@ -21,6 +26,16 @@ export class CreateTaskDto {
   @IsBoolean()
   @IsOptional()
   isCompleted?: boolean;
+
+  @ApiProperty({ description: 'Prioridade da tarefa', enum: ['low', 'medium', 'high'], required: false })
+  @IsString()
+  @IsOptional()
+  priority?: 'low' | 'medium' | 'high';
+
+  @ApiProperty({ description: 'Categoria da tarefa', required: false })
+  @IsString()
+  @IsOptional()
+  category?: string;
 }
 
 export class UpdateTaskDto {
@@ -29,6 +44,11 @@ export class UpdateTaskDto {
   @IsOptional()
   title?: string;
 
+  @ApiProperty({ description: 'Descrição da tarefa', required: false })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
   @ApiProperty({ description: 'Status de conclusão da tarefa', required: false })
   @IsBoolean()
   @IsOptional()
@@ -38,4 +58,14 @@ export class UpdateTaskDto {
   @IsNumber()
   @IsOptional()
   position?: number;
+
+  @ApiProperty({ description: 'Prioridade da tarefa', enum: ['low', 'medium', 'high'], required: false })
+  @IsString()
+  @IsOptional()
+  priority?: 'low' | 'medium' | 'high';
+
+  @ApiProperty({ description: 'Categoria da tarefa', required: false })
+  @IsString()
+  @IsOptional()
+  category?: string;
 }

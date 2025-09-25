@@ -74,31 +74,38 @@ export default function HomePage() {
     }
   };
 
-  const handleGenerateFromAI = async (listName: string, prompt: string) => {
-    await generateFromAI(listName, prompt);
+  const handleGenerateFromAI = async (listName: string, prompt: string, description?: string) => {
+    await generateFromAI(listName, prompt, description);
   };
 
-  const handleGenerateWithAI = async (prompt: string) => {
+  const handleGenerateWithAI = async (prompt: string, listName?: string, listDescription?: string) => {
     if (prompt.trim()) {
-      await generateFromAI('Lista Gerada por IA', prompt.trim());
+      const finalListName = listName || 'Lista Gerada por IA';
+      await generateFromAI(finalListName, prompt.trim(), listDescription);
     }
   };
 
-  const handleGeneratePreview = async (prompt: string): Promise<TaskPreview[]> => {
+  const handleGeneratePreview = async (prompt: string): Promise<{ listName: string; listDescription: string; tasks: TaskPreview[] }> => {
     if (!user) throw new Error('Usuário não encontrado');
     
-    const tasks = await apiClient.generateTasksPreview({ 
-      listName: 'Preview', 
-      prompt: prompt.trim() 
+    const previewData = await apiClient.generateTasksPreview({ 
+      prompt: prompt.trim(),
+      listName: undefined
     });
     
     // Convert API response to TaskPreview format
-    return tasks.map((task: any) => ({
+    const tasks = previewData.tasks.map((task: any) => ({
       title: task.title,
       description: task.description,
       priority: task.priority || 'medium',
       category: task.category
     }));
+    
+    return {
+      listName: previewData.listName,
+      listDescription: previewData.listDescription,
+      tasks
+    };
   };
 
 

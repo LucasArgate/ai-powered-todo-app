@@ -3,7 +3,10 @@ import { TaskList as TaskListType } from '@/types';
 import Card from '@/components/atoms/Card/Card';
 import Button from '@/components/atoms/Button/Button';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
+import DropdownMenu, { DropdownMenuItem } from '@/components/atoms/DropdownMenu/DropdownMenu';
 import { Plus, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import { firstTaskImage } from '@/assets';
 
 export interface TaskListSelectorProps {
   taskLists: TaskListType[];
@@ -165,13 +168,23 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
 
       {taskLists.length === 0 ? (
         <Card className="text-center py-8">
-          <p className="text-secondary-500 mb-4">Ainda não há listas de tarefas.</p>
-          <Button
-            variant="primary"
-            onClick={onCreateNewList}
-          >
-            Criar Sua Primeira Lista
-          </Button>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="relative w-80 h-60 opacity-30">
+              <Image
+                src={firstTaskImage}
+                alt="Crie sua primeira lista de tarefas"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <p className="text-secondary-500 mb-4">Ainda não há listas de tarefas.</p>
+            <Button
+              variant="primary"
+              onClick={onCreateNewList}
+            >
+              Criar Sua Primeira Lista
+            </Button>
+          </div>
         </Card>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -185,7 +198,7 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
               }`}
             >
               <div className="space-y-3">
-                {/* Header with title and delete button */}
+                {/* Header with title and menu */}
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-secondary-900 mb-1">
@@ -207,17 +220,18 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
                   </div>
                   
                   {onDeleteTaskList && (
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteTaskList(taskList.id);
-                      }}
+                    <DropdownMenu
+                      items={[
+                        {
+                          id: 'delete',
+                          label: 'Excluir Lista',
+                          onClick: () => onDeleteTaskList(taskList.id),
+                          variant: 'danger',
+                          icon: <Trash2 size={14} />
+                        }
+                      ]}
                       className="ml-2"
-                    >
-                      Excluir
-                    </Button>
+                    />
                   )}
                 </div>
 

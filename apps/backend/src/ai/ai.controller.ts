@@ -95,6 +95,45 @@ export class AiController extends BaseController {
     return await this.aiService.generateTaskListFromPrompt(userId, generateTasksDto);
   }
 
+  @Post('generate-tasklist-preview')
+  @ApiOperation({ 
+    summary: 'Gerar preview de lista de tarefas usando IA',
+    description: 'Gera um preview de lista de tarefas (com título, descrição e tasks) baseada em um prompt usando serviços de IA. Não salva no banco de dados, apenas retorna os dados para preview. Se um listName for fornecido, usa esse nome; caso contrário, gera automaticamente um título usando IA.'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Preview da lista de tarefas gerado com sucesso',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'Viagem para o Japão' },
+        description: { type: 'string', example: 'Planejamento completo para uma viagem ao Japão' },
+        tasks: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              title: { type: 'string', example: 'Pesquisar voos' },
+              description: { type: 'string', example: 'Encontrar voos com melhor custo-benefício' },
+              priority: { type: 'string', enum: ['low', 'medium', 'high'], example: 'high' },
+              category: { type: 'string', example: 'Transporte' }
+            }
+          }
+        }
+      }
+    }
+  })
+  @ApiResponse({ status: 400, description: 'Erro na requisição ou falha na API de IA' })
+  @ApiResponse({ status: 401, description: 'Token de autorização inválido' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado ou sem API key configurada' })
+  async generateTaskListPreview(
+    @Req() request: any,
+    @Body() generateTasksDto: GenerateTasksDto
+  ) {
+    const userId = this.extractUserIdFromAuthHeader(request);
+    return await this.aiService.generateTaskListPreview(userId, generateTasksDto);
+  }
+
   @Get('providers')
   @ApiOperation({ 
     summary: 'Listar provedores de IA disponíveis',
