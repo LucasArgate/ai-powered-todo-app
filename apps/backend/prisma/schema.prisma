@@ -58,14 +58,16 @@ model Task {
 }
 
 model Provider {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String
-  free        Boolean  @default(false)
-  models      String   // JSON array of available models
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id @default(cuid())
+  name              String   @unique
+  description       String
+  free              Boolean  @default(false)
+  models            String   // JSON array of available models
+  tokenUrl          String?  // URL to get API token
+  documentationUrl  String?  // URL to provider documentation
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   @@map("providers")
 }
@@ -73,4 +75,5 @@ model Provider {
 enum AiIntegrationType {
   huggingface
   openrouter
+  gemini
 }

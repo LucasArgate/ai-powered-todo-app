@@ -20,14 +20,14 @@ export class GenerateTasksDto {
   listName?: string;
 
   @ApiPropertyOptional({
-    description: 'Provedor de IA a ser utilizado (apenas gratuitos)',
-    enum: ['huggingface', 'openrouter'],
+    description: 'Provedor de IA a ser utilizado',
+    enum: ['huggingface', 'openrouter', 'gemini'],
     example: 'huggingface',
     default: 'huggingface',
   })
   @IsOptional()
-  @IsEnum(['huggingface', 'openrouter'])
-  provider?: 'huggingface' | 'openrouter';
+  @IsEnum(['huggingface', 'openrouter', 'gemini'])
+  provider?: 'huggingface' | 'openrouter' | 'gemini';
 
   @ApiPropertyOptional({
     description: 'Modelo específico do provedor',
@@ -66,13 +66,13 @@ export class GenerateTasksDto {
 
 export class AiConfigDto {
   @ApiProperty({
-    description: 'Provedor de IA (apenas gratuitos)',
-    enum: ['huggingface', 'openrouter'],
+    description: 'Provedor de IA',
+    enum: ['huggingface', 'openrouter', 'gemini'],
     example: 'huggingface',
   })
   @IsString()
   @IsNotEmpty()
-  provider: 'huggingface' | 'openrouter';
+  provider: 'huggingface' | 'openrouter' | 'gemini';
 }
 
 export class TestApiKeyDto {
@@ -86,12 +86,12 @@ export class TestApiKeyDto {
 
   @ApiProperty({
     description: 'Provedor de IA para testar',
-    enum: ['huggingface', 'openrouter'],
+    enum: ['huggingface', 'openrouter', 'gemini'],
     example: 'huggingface',
   })
   @IsString()
   @IsNotEmpty()
-  provider: 'huggingface' | 'openrouter';
+  provider: 'huggingface' | 'openrouter' | 'gemini';
 
   @ApiPropertyOptional({
     description: 'Modelo específico do provedor para testar',
@@ -105,12 +105,12 @@ export class TestApiKeyDto {
 export class TestUserApiKeyDto {
   @ApiProperty({
     description: 'Provedor de IA para testar',
-    enum: ['huggingface', 'openrouter'],
+    enum: ['huggingface', 'openrouter', 'gemini'],
     example: 'huggingface',
   })
   @IsString()
   @IsNotEmpty()
-  provider: 'huggingface' | 'openrouter';
+  provider: 'huggingface' | 'openrouter' | 'gemini';
 
   @ApiPropertyOptional({
     description: 'Modelo específico do provedor para testar',

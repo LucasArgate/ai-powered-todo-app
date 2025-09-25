@@ -3,6 +3,7 @@ import { TaskList as TaskListType } from '@/types';
 import Card from '@/components/atoms/Card/Card';
 import Button from '@/components/atoms/Button/Button';
 import LoadingSpinner from '@/components/atoms/LoadingSpinner/LoadingSpinner';
+import DropdownMenu, { DropdownMenuItem } from '@/components/atoms/DropdownMenu/DropdownMenu';
 import { Plus, Trash2 } from 'lucide-react';
 
 export interface TaskListSelectorProps {
@@ -185,7 +186,7 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
               }`}
             >
               <div className="space-y-3">
-                {/* Header with title and delete button */}
+                {/* Header with title and menu */}
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-secondary-900 mb-1">
@@ -207,17 +208,18 @@ const TaskListSelector: React.FC<TaskListSelectorProps> = ({
                   </div>
                   
                   {onDeleteTaskList && (
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteTaskList(taskList.id);
-                      }}
+                    <DropdownMenu
+                      items={[
+                        {
+                          id: 'delete',
+                          label: 'Excluir Lista',
+                          onClick: () => onDeleteTaskList(taskList.id),
+                          variant: 'danger',
+                          icon: <Trash2 size={14} />
+                        }
+                      ]}
                       className="ml-2"
-                    >
-                      Excluir
-                    </Button>
+                    />
                   )}
                 </div>
 

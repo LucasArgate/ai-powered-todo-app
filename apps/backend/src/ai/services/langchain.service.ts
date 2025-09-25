@@ -1,17 +1,16 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
-import { ChatOpenAI } from '@langchain/openai';
-import { HuggingFaceInference } from '@langchain/community/llms/hf';
-import { HfInference } from '@huggingface/inference';
 import { PromptTemplate } from '@langchain/core/prompts';
 import { RunnableSequence } from '@langchain/core/runnables';
 import { taskParser, TASK_GENERATION_PROMPT, TaskSuggestion } from '../parsers/task.parser';
+import { AiProviderFactory, ProviderType } from '../providers/ai-provider.factory';
+import { IAiProvider } from '../providers/ai-provider.interface';
 
 interface RetryConfig {
   maxRetries: number;
   retryDelay: number;
 }
 
-export type LLMProvider = 'huggingface' | 'openrouter';
+export type LLMProvider = ProviderType;
 
 export interface LLMConfig {
   provider: LLMProvider;
@@ -24,6 +23,8 @@ export interface LLMConfig {
 @Injectable()
 export class LangChainService {
   private readonly logger = new Logger(LangChainService.name);
+
+  constructor(private readonly aiProviderFactory: AiProviderFactory) {}
 
   /**
    * Função abstrata para normalizar configuração do modelo
@@ -61,7 +62,7 @@ export class LangChainService {
   }
 
   /**
-   * Gera tarefas a partir de um prompt usando LangChain
+   * Generates tasks from a prompt using AI providers
    */
   async generateTasks(goal: string, config: LLMConfig): Promise<TaskSuggestion[]> {
     const retryConfig: RetryConfig = {
@@ -72,7 +73,7 @@ export class LangChainService {
     try {
       return await this.executeWithRetry(
         async () => {
-          // Normalizar configuração do modelo (mesma lógica do testApiKey)
+          // Normalize model configuration
           const normalizedConfig = this.normalizeModelConfig(config);
           
           this.logger.log(`=== STARTING TASK GENERATION ===`);
@@ -81,7 +82,8 @@ export class LangChainService {
           this.logger.log(`Model: ${normalizedConfig.model}`);
           this.logger.log(`API Key: ${normalizedConfig.apiKey ? normalizedConfig.apiKey.substring(0, 10) + '...' : 'NOT PROVIDED'}`);
 
-          const model = this.createLLMModel(normalizedConfig);
+          // Get the appropriate provider using factory
+          const provider = this.aiProviderFactory.getProvider(normalizedConfig.provider);
           const prompt = this.createPromptTemplate();
           
           // Get format instructions
@@ -98,49 +100,34 @@ export class LangChainService {
           this.logger.log(fullPrompt);
           this.logger.log(`=== END PROMPT ===`);
           
-          // Para Hugging Face, usar método direto para evitar problemas de auto-seleção
-          if (normalizedConfig.provider === 'huggingface') {
-            this.logger.log(`Using Hugging Face direct method for task generation`);
-            const rawResponse = await this.generateTextWithHfDirect(fullPrompt, normalizedConfig);
-            this.logger.log(`=== RAW AI RESPONSE ===`);
-            this.logger.log(rawResponse);
-            this.logger.log(`=== END RAW RESPONSE ===`);
-            
-            // Try to parse the response
-            try {
-              const result = await taskParser.parse(rawResponse) as TaskSuggestion[];
-              this.logger.log(`=== PARSED TASKS ===`);
-              this.logger.log(JSON.stringify(result, null, 2));
-              this.logger.log(`=== END PARSED TASKS ===`);
-              this.logger.log(`Generated ${result.length} tasks using ${normalizedConfig.provider}`);
-              return result;
-            } catch (parseError) {
-              this.logger.error(`Failed to parse AI response: ${parseError.message}`);
-              this.logger.error(`Raw response that failed to parse: ${rawResponse}`);
-              throw new BadRequestException('AI retornou resposta em formato inválido. Tente novamente.');
+          // Generate response using the provider
+          const rawResponse = await provider.generate(
+            fullPrompt,
+            normalizedConfig.model,
+            normalizedConfig.apiKey,
+            {
+              temperature: normalizedConfig.temperature,
+              maxTokens: normalizedConfig.maxTokens,
             }
-          }
-
-          // Criar chain: prompt -> model -> parser
-          const chain = RunnableSequence.from([
-            prompt,
-            model,
-            taskParser,
-          ]);
-
-          this.logger.log(`Executing chain with model: ${normalizedConfig.provider}`);
+          );
           
-          // Executar chain
-          const result = await chain.invoke({
-            goal,
-            format_instructions: formatInstructions,
-          }) as TaskSuggestion[];
-
-          this.logger.log(`=== CHAIN RESULT ===`);
-          this.logger.log(JSON.stringify(result, null, 2));
-          this.logger.log(`=== END CHAIN RESULT ===`);
-          this.logger.log(`Generated ${result.length} tasks using ${normalizedConfig.provider}`);
-          return result;
+          this.logger.log(`=== RAW AI RESPONSE ===`);
+          this.logger.log(rawResponse);
+          this.logger.log(`=== END RAW RESPONSE ===`);
+          
+          // Try to parse the response
+          try {
+            const result = await taskParser.parse(rawResponse) as TaskSuggestion[];
+            this.logger.log(`=== PARSED TASKS ===`);
+            this.logger.log(JSON.stringify(result, null, 2));
+            this.logger.log(`=== END PARSED TASKS ===`);
+            this.logger.log(`Generated ${result.length} tasks using ${normalizedConfig.provider}`);
+            return result;
+          } catch (parseError) {
+            this.logger.error(`Failed to parse AI response: ${parseError.message}`);
+            this.logger.error(`Raw response that failed to parse: ${rawResponse}`);
+            throw new BadRequestException('AI retornou resposta em formato inválido. Tente novamente.');
+          }
         },
         retryConfig,
         `generateTasks with ${config.provider}`
@@ -214,47 +201,6 @@ export class LangChainService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  /**
-   * Cria o modelo LLM baseado no provedor
-   */
-  private createLLMModel(config: LLMConfig) {
-    try {
-      const baseConfig = {
-        apiKey: config.apiKey,
-        temperature: config.temperature ?? 0.7,
-        maxTokens: config.maxTokens ?? 1000,
-        timeout: 30000, // 30 segundos timeout
-      };
-
-      switch (config.provider) {
-        case 'huggingface':
-          // Para Hugging Face, vamos usar uma abordagem híbrida
-          return this.createHuggingFaceModel(config);
-
-        case 'openrouter':
-          // OpenRouter usa API compatível com OpenAI
-          return new ChatOpenAI({
-            ...baseConfig,
-            model: config.model ?? 'openai/gpt-3.5-turbo',
-            configuration: {
-              baseURL: 'https://openrouter.ai/api/v1',
-              defaultHeaders: {
-                'HTTP-Referer': 'http://localhost:3001',
-                'X-Title': 'AI Todo App',
-              },
-            },
-          });
-
-        default:
-          throw new BadRequestException(`Unsupported provider: ${config.provider}`);
-      }
-    } catch (error) {
-
-      this.logger.error(`Failed to create LLM model for ${config.provider}:`, error.message);
-      
-      throw new BadRequestException(`Failed to initialize ${config.provider} model: ${error.message}`);
-    }
-  }
 
   /**
    * Cria o template de prompt estruturado
@@ -264,161 +210,40 @@ export class LangChainService {
     return PromptTemplate.fromTemplate(TASK_GENERATION_PROMPT);
   }
 
-  /**
-   * Cria modelo Hugging Face usando a integração oficial do LangChain
-   */
-  private createHuggingFaceModel(config: LLMConfig) {
-    try {
-      // A configuração já vem normalizada, então usar diretamente
-      return new HuggingFaceInference({
-        model: config.model!,
-        apiKey: config.apiKey,
-        temperature: config.temperature ?? 0.7,
-        maxTokens: config.maxTokens ?? 500,
-      });
-    } catch (error) {
-      this.logger.error(`Failed to create HuggingFace model:`, error.message);
-      throw new BadRequestException(`Failed to initialize HuggingFace model: ${error.message}`);
-    }
-  }
 
   /**
-   * Método alternativo usando diretamente a API do Hugging Face para evitar problemas de auto-seleção
-   */
-  private async generateTextWithHfDirect(prompt: string, config: LLMConfig): Promise<string> {
-    try {
-      this.logger.log(`=== HF DIRECT API CALL ===`);
-      this.logger.log(`Creating HfInference with model: ${config.model}`);
-      this.logger.log(`API Key: ${config.apiKey ? config.apiKey.substring(0, 10) + '...' : 'NOT PROVIDED'}`);
-      this.logger.log(`Max Tokens: ${config.maxTokens ?? 100}`);
-      this.logger.log(`Temperature: ${config.temperature ?? 0.7}`);
-      
-      const hf = new HfInference(config.apiKey);
-      const model = config.model;
-
-      // Try text generation first, fallback to conversational if needed
-      try {
-        this.logger.log(`Calling textGeneration with model: ${model}`);
-        this.logger.log(`Input prompt length: ${prompt.length} characters`);
-        
-        const response = await hf.textGeneration({
-          model: model,
-          inputs: prompt,
-          parameters: {
-            max_new_tokens: config.maxTokens ?? 100,
-            temperature: config.temperature ?? 0.7,
-            return_full_text: false,
-          },
-        });
-
-        this.logger.log(`=== HF TEXT GENERATION RESPONSE ===`);
-        this.logger.log(`Response: ${JSON.stringify(response, null, 2)}`);
-        this.logger.log(`Generated text: "${response.generated_text || ''}"`);
-        this.logger.log(`=== END HF RESPONSE ===`);
-
-        return response.generated_text || '';
-      } catch (textGenError) {
-        this.logger.error(`Text generation failed: ${textGenError.message}`);
-        
-        // If text generation fails, try conversational
-        if (textGenError.message.includes('not supported for task text-generation')) {
-          this.logger.log(`Text generation not supported, trying conversational for model: ${model}`);
-          try {
-            const response = await hf.chatCompletion({
-              model: model,
-              messages: [
-                {
-                  role: 'user',
-                  content: prompt,
-                },
-              ],
-              max_tokens: config.maxTokens ?? 100,
-              temperature: config.temperature ?? 0.7,
-            });
-
-            this.logger.log(`=== HF CHAT COMPLETION RESPONSE ===`);
-            this.logger.log(`Response: ${JSON.stringify(response, null, 2)}`);
-            this.logger.log(`Message content: "${response.choices?.[0]?.message?.content || ''}"`);
-            this.logger.log(`=== END HF CHAT RESPONSE ===`);
-
-            return response.choices?.[0]?.message?.content || '';
-          } catch (convError) {
-            this.logger.error(`Both text generation and conversational failed for model: ${model}`);
-            this.logger.error(`Conversational error: ${convError.message}`);
-            throw convError; // Throw the original error
-          }
-        } else {
-          throw textGenError; // Re-throw if it's not a task support error
-        }
-      }
-    } catch (error) {
-      this.logger.error(`=== HF DIRECT API ERROR ===`);
-      this.logger.error(`Error: ${error.message}`);
-      this.logger.error(`Stack: ${error.stack}`);
-      this.logger.error(`Model: ${config.model ?? 'gpt2'}`);
-      this.logger.error(`Prompt preview: ${prompt.substring(0, 200)}${prompt.length > 200 ? '...' : ''}`);
-      this.logger.error(`=== END HF ERROR ===`);
-      throw error;
-    }
-  }
-
-  /**
-   * Retorna os provedores disponíveis
+   * Returns available providers using the factory
    */
   getAvailableProviders(): { name: LLMProvider; description: string; free: boolean; models: string[] }[] {
-    return [
-      {
-        name: 'huggingface',
-        description: 'Hugging Face Inference API - Modelos gratuitos disponíveis',
-        free: true,
-        models: ['microsoft/DialoGPT-medium', 'microsoft/DialoGPT-large', 'facebook/blenderbot-400M-distill', 'mistralai/Mistral-7B-Instruct-v0.2'],
-      },
-      {
-        name: 'openrouter',
-        description: 'OpenRouter - Acesso a múltiplos modelos de IA',
-        free: false,
-        models: ['openai/gpt-3.5-turbo', 'anthropic/claude-3-haiku'],
-      },
-    ];
+    return this.aiProviderFactory.getProvidersInfo();
   }
 
   /**
-   * Gera texto simples a partir de um prompt
+   * Generates simple text from a prompt using AI providers
    */
   async generateText(prompt: string, config: LLMConfig): Promise<string> {
     try {
-      // Normalizar configuração do modelo
+      // Normalize model configuration
       const normalizedConfig = this.normalizeModelConfig(config);
       
       this.logger.log(`Generating text with provider: ${normalizedConfig.provider}, model: ${normalizedConfig.model}`);
       
-      // Para Hugging Face, usar método direto para evitar problemas de auto-seleção
-      if (normalizedConfig.provider === 'huggingface') {
-        this.logger.log(`Using Hugging Face direct method for model: ${normalizedConfig.model}`);
-        return await this.generateTextWithHfDirect(prompt, normalizedConfig);
-      }
-
-      const model = this.createLLMModel(normalizedConfig);
+      // Get the appropriate provider using factory
+      const provider = this.aiProviderFactory.getProvider(normalizedConfig.provider);
       
-      // Create a timeout promise
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout: Request took too long')), 15000); // 15 segundos
-      });
+      // Generate response using the provider
+      const response = await provider.generate(
+        prompt,
+        normalizedConfig.model,
+        normalizedConfig.apiKey,
+        {
+          temperature: normalizedConfig.temperature,
+          maxTokens: normalizedConfig.maxTokens,
+          timeout: 15000, // 15 seconds timeout
+        }
+      );
       
-      // Race between the model call and timeout
-      const response = await Promise.race([
-        model.invoke(prompt),
-        timeoutPromise
-      ]);
-      
-      // Extract text from response
-      if (typeof response === 'string') {
-        return response;
-      } else if (response && typeof response === 'object' && 'content' in response) {
-        return (response as any).content;
-      } else {
-        return JSON.stringify(response);
-      }
+      return response;
     } catch (error) {
       this.logger.error('Error generating text:', error);
       
@@ -529,7 +354,7 @@ Return ONLY the description, no quotes or additional text.`;
   }
 
   /**
-   * Testa se uma API key está funcionando corretamente
+   * Tests if an API key is working correctly using AI providers
    */
   async testApiKey(config: LLMConfig): Promise<{ valid: boolean; message: string; provider: string; model?: string }> {
     try {
@@ -537,42 +362,23 @@ Return ONLY the description, no quotes or additional text.`;
       this.logger.log(`Model being tested: ${config.model || 'default'}`);
       this.logger.log(`API key prefix: ${config.apiKey ? config.apiKey.substring(0, 10) + '...' : 'NOT PROVIDED'}`);
       
-      // Validar configuração básica primeiro
+      // Validate basic configuration first
       this.validateConfig(config);
 
-      // Normalizar configuração do modelo (mesma lógica do generateTasks)
+      // Normalize model configuration
       const normalizedConfig = this.normalizeModelConfig(config);
       
-      // Criar configuração de teste com parâmetros mínimos
-      const testConfig: LLMConfig = {
-        ...normalizedConfig,
-        temperature: 0.1, // Baixa temperatura para resposta mais consistente
-        maxTokens: 50, // Poucos tokens para teste rápido
-      };
+      // Get the appropriate provider using factory
+      const provider = this.aiProviderFactory.getProvider(normalizedConfig.provider);
+      
+      // Test using the provider's testApiKey method
+      const result = await provider.testApiKey(
+        normalizedConfig.apiKey,
+        normalizedConfig.model
+      );
 
-      // Teste simples: gerar uma resposta curta
-      const testPrompt = 'Hello, how are you?';
-      this.logger.log(`Attempting to generate text with model: ${testConfig.model || 'default'}`);
-      const response = await this.generateText(testPrompt, testConfig);
-
-      // Verificar se recebemos uma resposta válida
-      if (response && response.trim().length > 0) {
-        this.logger.log(`API key test successful for ${config.provider}`);
-        return {
-          valid: true,
-          message: 'API key está funcionando corretamente',
-          provider: config.provider,
-          model: config.model,
-        };
-      } else {
-        this.logger.warn(`API key test failed for ${config.provider}: Empty response`);
-        return {
-          valid: false,
-          message: 'API key retornou resposta vazia',
-          provider: config.provider,
-          model: config.model,
-        };
-      }
+      this.logger.log(`API key test completed for ${config.provider}: ${result.valid ? 'SUCCESS' : 'FAILED'}`);
+      return result;
     } catch (error) {
       this.logger.error(`API key test failed for ${config.provider}:`, error.message);
       this.logger.error(`Full error details:`, {
@@ -582,7 +388,7 @@ Return ONLY the description, no quotes or additional text.`;
         provider: config.provider
       });
       
-      // Mapear erros específicos para mensagens amigáveis
+      // Map specific errors to friendly messages
       let errorMessage = 'Erro desconhecido ao testar API key';
       
       if (error.message.includes('API key inválida') || error.message.includes('Invalid API key')) {
@@ -604,11 +410,11 @@ Return ONLY the description, no quotes or additional text.`;
       } else if (error.message.includes('Timeout')) {
         errorMessage = 'Timeout: A requisição demorou muito para responder. Tente novamente.';
       } else if (error.message.includes('BadRequestException')) {
-        // Extrair a mensagem real do BadRequestException
+        // Extract the real message from BadRequestException
         const match = error.message.match(/BadRequestException: (.+)/);
         errorMessage = match ? match[1] : error.message;
       } else {
-        // Para outros erros, mostrar a mensagem real ao invés de genérica
+        // For other errors, show the real message instead of generic
         errorMessage = error.message || 'Erro desconhecido ao testar API key';
       }
 

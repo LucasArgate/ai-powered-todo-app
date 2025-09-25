@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from '@/components/atoms/Button/Button';
+import DropdownMenu, { DropdownMenuItem } from '@/components/atoms/DropdownMenu/DropdownMenu';
 import { TaskList } from '@/types';
+import { Edit, Trash2 } from 'lucide-react';
 
 export interface TaskListHeaderProps {
   taskList: TaskList;
@@ -118,14 +120,24 @@ const TaskListHeader: React.FC<TaskListHeaderProps> = ({
                   Editar
                 </Button>
               )}
-              {onDelete && (
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => onDelete(taskList.id)}
-                >
-                  Excluir Lista
-                </Button>
+              {(onEdit || onDelete) && (
+                <DropdownMenu
+                  items={[
+                    ...(onEdit ? [{
+                      id: 'edit',
+                      label: 'Editar Lista',
+                      onClick: () => onEdit(taskList),
+                      icon: <Edit size={14} />
+                    }] : []),
+                    ...(onDelete ? [{
+                      id: 'delete',
+                      label: 'Excluir Lista',
+                      onClick: () => onDelete(taskList.id),
+                      variant: 'danger' as const,
+                      icon: <Trash2 size={14} />
+                    }] : [])
+                  ]}
+                />
               )}
             </>
           )}

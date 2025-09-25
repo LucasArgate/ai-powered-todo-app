@@ -208,7 +208,7 @@ const taskListSlice = createSlice({
       })
       .addCase(createTaskList.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.taskLists.push(action.payload);
+        state.taskLists.unshift(action.payload);
         // Don't set currentTaskList - let user stay on home page
         state.error = null;
       })
@@ -225,7 +225,7 @@ const taskListSlice = createSlice({
       })
       .addCase(generateFromAI.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.taskLists.push(action.payload);
+        state.taskLists.unshift(action.payload);
         // Don't set currentTaskList - let user stay on home page
         state.error = null;
       })
