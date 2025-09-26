@@ -70,7 +70,8 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 - **[Frontend Setup](./apps/frontend/SETUP.md)** - Guia de configuração e resolução de problemas
 - **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
 - **[🤖 Estudo de IA Agentic](./apps/ia/README.md)** - Estudo profundo sobre criação de agentes inteligentes com LangGraph
-
+- **[📋 Workflows e Agentes](./apps/ia/docs/workflows-and-agents.md)** - Guia completo sobre diferenças e aplicabilidades de workflows vs agentes
+  
 ## 🛠️ Como executar a aplicação
 
 ### Pré-requisitos
