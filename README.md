@@ -25,23 +25,27 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 
 ## 🚀 Tecnologias Utilizadas
 
-### Por que essas tecnologias?
+### Backend (Servidor)
+- **NestJS** - Framework moderno para criar APIs robustas e escaláveis
+- **TypeScript** - Linguagem que torna o código mais seguro e fácil de manter
+- **Prisma** - Ferramenta que facilita o trabalho com banco de dados
+- **SQLite** - Banco de dados simples e portável
+- **LangChain** - Biblioteca especializada para integração com Inteligência Artificial
+- **Swagger** - Documentação automática da API
 
-**Backend (NestJS + TypeScript)**
-- ✅ **NestJS**: Framework robusto e escalável para APIs empresariais
-- ✅ **TypeScript**: Código mais seguro e manutenível
-- ✅ **Prisma**: ORM moderno que facilita desenvolvimento e manutenção do banco
-- ✅ **SQLite**: Banco simples e portável (conforme especificado no desafio)
-- ✅ **LangChain**: Biblioteca especializada para integração com LLMs (IA)
-- ✅ **Swagger + OpenAPI**: Documentação técnica e compatibilidade com MCP servers
+### Frontend (Interface do Usuário)
+- **Next.js 14** - Framework React moderno para criar interfaces rápidas
+- **TypeScript** - Tipagem estática para código mais seguro
+- **Tailwind CSS** - Sistema de design responsivo e moderno
+- **Redux Toolkit** - Gerenciamento de estado da aplicação
+- **Atomic Design** - Arquitetura de componentes reutilizáveis
 
-**Frontend (Next.js + TypeScript + Atomic Design)**
-- ✅ **Next.js 14**: Framework React moderno com App Router para performance otimizada
-- ✅ **TypeScript**: Tipagem estática completa para código mais seguro e manutenível
-- ✅ **Atomic Design**: Arquitetura de componentes escalável e reutilizável
-- ✅ **Tailwind CSS**: Sistema de design consistente e responsivo
-- ✅ **Interface Reativa**: Atualizações em tempo real sem recarregar página
-- ✅ **State Management**: Hook customizado para gerenciamento de estado centralizado
+### Inteligência Artificial
+- **LangGraph** - Framework para criar agentes inteligentes
+- **LangChain** - Biblioteca para integração com modelos de IA
+- **Python** - Linguagem principal para desenvolvimento de IA
+- **Hugging Face** - Plataforma de modelos de IA gratuitos
+- **OpenRouter** - Acesso a múltiplos provedores de IA (GPT, Claude, etc.)
 
 ## 📁 Estrutura do Projeto
 
@@ -49,9 +53,10 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 /ai-powered-todo-app
 ├── apps/
 │   ├── backend/         # API NestJS (servidor)
-│   └── frontend/        # Interface Next.js (cliente)
+│   ├── frontend/        # Interface Next.js (cliente)
+│   └── ia/              # Estudo de IA Agentic
 ├── docs/
-│   ├── desafio.md       # Especificações do desafio técnico
+│   ├── desafio.md       # Especificações do desafio
 │   └── solucao.md       # Arquitetura da solução
 ├── package.json         # Configuração do projeto
 └── README.md           # Este arquivo
