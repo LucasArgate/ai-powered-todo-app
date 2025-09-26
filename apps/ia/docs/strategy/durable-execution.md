@@ -1,5 +1,7 @@
 # Execução Durável (Durable Execution)
 
+[← Voltar para Strategy](../strategy.md)
+
 A execução durável no LangGraph permite que processos longos sejam pausados e retomados exatamente de onde pararam, mesmo após falhas, reinicializações ou interrupções. Isso é fundamental para workflows complexos que podem levar horas ou dias para completar.
 
 ## Por que Execução Durável é Importante?

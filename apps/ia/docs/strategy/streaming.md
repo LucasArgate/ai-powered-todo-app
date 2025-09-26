@@ -1,5 +1,7 @@
 # Streaming
 
+[← Voltar para Strategy](../strategy.md)
+
 O streaming no LangGraph permite que respostas sejam transmitidas em tempo real, conforme são geradas, proporcionando uma experiência mais interativa e responsiva para o usuário. Isso é especialmente importante para aplicações que precisam de feedback imediato.
 
 ## Por que Streaming é Importante?

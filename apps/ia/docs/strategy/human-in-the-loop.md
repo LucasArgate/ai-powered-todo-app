@@ -1,5 +1,7 @@
 # Human-in-the-Loop
 
+[← Voltar para Strategy](../strategy.md)
+
 Human-in-the-Loop (HITL) no LangGraph permite que humanos intervenham em processos automatizados para validação, correção ou tomada de decisões críticas. Isso é essencial para aplicações que requerem supervisão humana ou onde a precisão é crítica.
 
 ## Por que Human-in-the-Loop é Importante?

@@ -1,5 +1,7 @@
 # Persistência
 
+[← Voltar para Strategy](../strategy.md)
+
 A persistência no LangGraph refere-se à capacidade de salvar e recuperar o estado de um agente entre diferentes execuções. Isso é fundamental para aplicações que precisam manter contexto ao longo do tempo, como chatbots, assistentes virtuais ou sistemas de workflow.
 
 ## Por que Persistência é Importante?

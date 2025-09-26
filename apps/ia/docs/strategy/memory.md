@@ -1,5 +1,7 @@
 # Add and Manage Memory
 
+[← Voltar para Strategy](../strategy.md)
+
 O gerenciamento de memória no LangGraph permite que agentes mantenham contexto entre interações, lembrem de informações importantes e construam conhecimento ao longo do tempo. Isso é fundamental para criar assistentes inteligentes que evoluem e melhoram com o uso.
 
 ## Por que Gerenciamento de Memória é Importante?

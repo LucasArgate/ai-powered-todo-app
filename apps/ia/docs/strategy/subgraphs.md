@@ -1,5 +1,7 @@
 # Subgrafos
 
+[← Voltar para Strategy](../strategy.md)
+
 Subgrafos no LangGraph permitem modularizar workflows complexos em componentes reutilizáveis e independentes. Isso facilita a manutenção, reutilização e composição de funcionalidades avançadas em sistemas de IA.
 
 ## Por que Subgrafos são Importantes?

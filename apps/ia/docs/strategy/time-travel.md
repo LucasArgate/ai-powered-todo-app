@@ -1,5 +1,7 @@
 # Time Travel
 
+[← Voltar para Strategy](../strategy.md)
+
 Time Travel no LangGraph refere-se à capacidade de navegar e recuperar estados anteriores de um agente, permitindo análise histórica, debugging avançado e recuperação de execuções passadas. Isso é fundamental para sistemas que precisam de auditoria completa e capacidade de "desfazer" ações.
 
 ## Por que Time Travel é Importante?

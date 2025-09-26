@@ -2,13 +2,13 @@
 
 **Apresentar a simplicidade e praticidade de criar um Agentic, react agentic baseado em princípios sólidos:**
 
-- Persistence
-- Durable execution
-- Streaming
-- Human-in-the-loop
-- Time travel
-- Add and manage memory
-- Subgraphs
+- [Persistence](./strategy/persistence.md)
+- [Durable execution](./strategy/durable-execution.md)
+- [Streaming](./strategy/streaming.md)
+- [Human-in-the-loop](./strategy/human-in-the-loop.md)
+- [Time travel](./strategy/time-travel.md)
+- [Add and manage memory](./strategy/memory.md)
+- [Subgraphs](./strategy/subgraphs.md)
 
 
 ### Sobre o LangGraph
