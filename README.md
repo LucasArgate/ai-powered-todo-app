@@ -64,6 +64,7 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 - **[Frontend README](./apps/frontend/README.md)** - Documentação da interface Next.js com Atomic Design
 - **[Frontend Setup](./apps/frontend/SETUP.md)** - Guia de configuração e resolução de problemas
 - **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
+- **[🤖 Estudo de IA Agentic](./apps/ia/README.md)** - Estudo profundo sobre criação de agentes inteligentes com LangGraph
 
 ## 🛠️ Como executar a aplicação
 
@@ -196,104 +197,7 @@ Usuário
 - **Lista**: Nome, descrição, prompt original da IA, contadores
 - **Tarefa**: Título, status de conclusão, posição na lista
 
-## 📝 Status do Projeto
 
-### ✅ Concluído - Infraestrutura Base
-- ~~Configurar o backend NestJS~~ ✅ **Concluído**
-- ~~Implementar a API de tarefas~~ ✅ **Concluído**
-- ~~Integrar com provedores de IA~~ ✅ **Concluído**
-- ~~Documentação técnica completa~~ ✅ **Concluído**
-- ~~Desenvolver a interface Next.js~~ ✅ **Concluído**
-- ~~Conectar frontend com backend~~ ✅ **Concluído**
-- ~~Implementar interface de usuário moderna~~ ✅ **Concluído**
-- ~~Sistema de autenticação~~ ✅ **Concluído**
-- ~~CRUD completo de listas e tarefas~~ ✅ **Concluído**
-- ~~Interface responsiva com Atomic Design~~ ✅ **Concluído**
-
-### ✅ Concluído - Funcionalidades Core
-- ~~Gerenciamento de usuários~~ ✅ **Concluído**
-- ~~Criação manual de listas e tarefas~~ ✅ **Concluído**
-- ~~Edição e exclusão de tarefas~~ ✅ **Concluído**
-- ~~Marcação de tarefas como concluídas~~ ✅ **Concluído**
-
-### ✅ Concluído - Geração Inteligente de Tasks
-
-#### 🤖 Sistema de IA - Preview e Geração
-- **🔄 Preview de Tasks**: Sistema para mostrar preview das tasks antes de criar
-  - ~~Interface de preview implementada~~ ✅ **Concluído**
-  - ~~Componente AIForm com validação~~ ✅ **Concluído**
-  - ~~Integração com configurações de IA~~ ✅ **Concluído**
-  - ~~Chamada real para LangChain (testado e validado)~~ ✅ **Concluído**
-  - ~~Parsing do JSON response (implementado)~~ ✅ **Concluído**
-  - ~~Validação do formato de retorno (funcional)~~ ✅ **Concluído**
-
-- **⚡ LangChain Integration**: Integração completa com provedores de IA
-  - ~~Estrutura base do LangChain service~~ ✅ **Concluído**
-  - ~~Configuração de múltiplos provedores (Hugging Face, OpenRouter)~~ ✅ **Concluído**
-  - ~~Prompt engineering otimizado (testado)~~ ✅ **Concluído**
-  - ~~JSON schema validation (implementado)~~ ✅ **Concluído**
-  - ~~Error handling robusto (funcional)~~ ✅ **Concluído**
-  - ~~Rate limiting e retry logic (configurado)~~ ✅ **Concluído**
-
-- **📊 Task Generation Pipeline**: Pipeline completo de geração
-  - ~~Frontend: Formulário de entrada com validação~~ ✅ **Concluído**
-  - ~~Frontend: Preview component para mostrar tasks geradas~~ ✅ **Concluído**
-  - ~~Backend: Endpoint para preview (funcional)~~ ✅ **Concluído**
-  - ~~Backend: Endpoint para criação final (testado)~~ ✅ **Concluído**
-  - ~~Validação de qualidade das tasks geradas (implementado)~~ ✅ **Concluído**
-
-#### 🎯 Melhorias Futuras
-
-1. **Performance e UX** 🚧
-   - Otimizar prompts para gerar tasks mais acionáveis
-   - Implementar templates específicos por categoria
-   - Adicionar validação de qualidade das respostas da IA
-
-2. **Funcionalidades Avançadas** 🚧
-   - Sistema de notificações e lembretes
-   - Compartilhamento de listas entre usuários
-   - Integrações com outras ferramentas de produtividade
-
-3. **Deploy e Produção** 🚧
-   - Configurar ambiente de produção
-   - Implementar monitoramento e analytics
-   - Otimizações específicas para mobile
-
-## 🎉 Status do MVP - CONCLUÍDO
-
-### ✅ MVP Entregue com Sucesso
-O **MVP (Minimum Viable Product)** da aplicação AI-Powered Todo App foi **concluído com sucesso** e está totalmente funcional:
-
-- ~~**Backend completo** com NestJS, Prisma e SQLite~~ ✅ **Concluído**
-- ~~**Frontend moderno** com Next.js 14 e Atomic Design~~ ✅ **Concluído**
-- ~~**Integração IA funcional** com LangChain (testado e validado)~~ ✅ **Concluído**
-- ~~**CRUD completo** de usuários, listas e tarefas~~ ✅ **Concluído**
-- ~~**Geração automática** de tarefas via IA (Hugging Face + OpenRouter)~~ ✅ **Concluído**
-- ~~**Interface responsiva** e experiência de usuário otimizada~~ ✅ **Concluído**
-- ~~**Documentação técnica** completa e detalhada~~ ✅ **Concluído**
-
-### 🚀 Funcionalidades Implementadas
-
-#### **Core Features**
-- **🎯 Geração Inteligente**: Sistema completo de geração de tarefas via IA
-- **📝 Gerenciamento Manual**: CRUD completo para criação manual de tarefas
-- **🔑 Configuração de IA**: Interface para configurar API Keys (Hugging Face/OpenRouter)
-- **👤 Autenticação**: Sistema de usuários com sessão segura
-- **📱 Design Responsivo**: Interface adaptável para desktop e mobile
-
-#### **Arquitetura Técnica**
-- **🏗️ Atomic Design**: Componentes escaláveis e reutilizáveis
-- **⚡ Performance**: Next.js 14 com App Router otimizado
-- **🔒 TypeScript**: Tipagem estática completa
-- **📚 Documentação**: Swagger/OpenAPI para API REST
-- **🗄️ Banco de Dados**: SQLite com Prisma ORM
-
-### 📋 Roadmap Futuro
-- **🚀 Deploy**: Configurar deploy em produção
-- **📱 Mobile**: Otimizações específicas para mobile
-- **🔔 Notificações**: Sistema de lembretes e notificações
-- **📊 Analytics**: Dashboard de produtividade e métricas
-- **🔄 Sync**: Sincronização offline e multi-dispositivo
 
 ## 🛠️ Tecnologias e Padrões Utilizados
 
@@ -319,6 +223,59 @@ O **MVP (Minimum Viable Product)** da aplicação AI-Powered Todo App foi **conc
 - **Componentização**: Arquitetura baseada em componentes reutilizáveis
 - **Responsive Design**: Interface adaptável para todos os dispositivos
 
+
+## 🤖 Resumo do Estudo de IA Agentic
+
+### 🎯 Goal (Objetivo)
+Implementar da "maneira criativa" um agente para executar "tarefas" para um "smart to-do list" usando Python e tecnologias de mercado estabelecidas.
+
+### 📋 Strategy (Estratégia)
+O estudo apresenta uma estratégia completa baseada em **7 pilares fundamentais** para construir agentes LangGraph robustos:
+
+1. **Persistence** 💾 - Manutenção de estado entre execuções
+2. **Durable Execution** 🔄 - Resistência a falhas e recuperação automática
+3. **Streaming** 📡 - Feedback em tempo real durante processamento
+4. **Human-in-the-Loop** 👤 - Intervenção humana quando necessário
+5. **Time Travel** ⏰ - Navegação e recuperação de estados anteriores
+6. **Memory** 🧠 - Gerenciamento de contexto e aprendizado contínuo
+7. **Subgraphs** 📦 - Modularização em componentes reutilizáveis
+
+### 🤔 Os Porquês (PQs)
+
+**Por que Python?**
+- IA é fluida, flexível e livre - Python oferece essa flexibilidade
+- Ecossistema inigualável para IA e Machine Learning
+- Acesso direto aos melhores frameworks (LangChain, LangGraph)
+- Comunidade focada em pesquisa e desenvolvimento de IA
+- Performance superior para tarefas intensivas em CPU
+
+**Por que tecnologias de mercado estabelecidas?**
+- Facilita resolução de problemas com soluções da comunidade open source
+- Não é cedo demais, mas também não é tardio - timing ideal
+- Suporte robusto e documentação madura
+- Facilita contratação de talentos especializados
+
+**Por que LangGraph?**
+- Framework de orquestração de baixo nível para agentes com estado
+- Usado por empresas como Klarna, Replit, Elastic
+- Focado inteiramente na orquestração de agentes
+- Permite criar sistemas complexos e de longa duração
+
+**Por que essa abordagem estratégica?**
+- **Simplicidade e Praticidade**: Demonstra como criar agentes reativos baseados em princípios sólidos
+- **Escalabilidade**: Cada pilar resolve problemas específicos de sistemas de IA em produção
+- **Robustez**: Combinação de persistência, execução durável e recuperação de falhas
+- **Experiência do Usuário**: Streaming e human-in-the-loop para interações naturais
+- **Manutenibilidade**: Subgrafos e time travel para debugging e evolução
+
+### 🚀 Implementação Prática
+O estudo inclui um **Task Generator Agent** completo que demonstra todos os conceitos através de:
+- Validação de intenção com score de viabilidade
+- Processamento de passos estruturados
+- Conversão para JSON padronizado
+- Integração com LangSmith para observabilidade
+- Exemplo prático de planejamento de viagem ao Japão
+
 ## 📄 Documentação Técnica
 
 - **[Desafio](./docs/desafio.md)** - Especificações completas do teste técnico
@@ -327,29 +284,4 @@ O **MVP (Minimum Viable Product)** da aplicação AI-Powered Todo App foi **conc
 - **[Backend README](./apps/backend/README.md)** - Guia técnico do backend
 - **[Frontend README](./apps/frontend/README.md)** - Documentação da interface Next.js
 - **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
-
-## 🎯 Destaques Técnicos para Avaliação
-
-### Arquitetura e Design Patterns
-- **🏗️ Atomic Design**: Implementação completa da metodologia de Brad Frost
-- **📦 Monorepo**: Estrutura organizada com workspace e dependências otimizadas
-- **🔄 Componentização**: Sistema de componentes reutilizáveis e escaláveis
-- **📱 Responsive Design**: Interface adaptável para todos os dispositivos
-
-### Qualidade de Código
-- **🔒 TypeScript**: Tipagem estática completa em frontend e backend
-- **📏 ESLint**: Linting consistente e configurações otimizadas
-- **📚 Documentação**: READMEs detalhados e documentação técnica completa
-- **🎨 Design System**: Sistema de design consistente com Tailwind CSS
-
-### Performance e Otimização
-- **⚡ Next.js 14**: App Router para performance otimizada
-- **📦 Build Otimizado**: Bundle otimizado para produção (28kB página principal)
-- **🔄 State Management**: Gerenciamento de estado eficiente com custom hooks
-- **📡 API Client**: Cliente HTTP otimizado com interceptors e tratamento de erros
-
-### Integração e Funcionalidades
-- **🤖 IA Integration**: Integração com múltiplos provedores (Hugging Face, OpenRouter)
-- **🔄 Real-time**: Atualizações em tempo real sem recarregar página
-- **🔐 Session Management**: Gerenciamento de sessão seguro com localStorage
-- **📊 Data Management**: CRUD completo com validação e tratamento de erros
+- **[🤖 Estudo de IA Agentic](./apps/ia/README.md)** - Estudo profundo sobre criação de agentes inteligentes com LangGraph

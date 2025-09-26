@@ -16,6 +16,12 @@
     "lint": "pnpm --filter backend lint && pnpm --filter frontend lint",
     "lint-api": "pnpm --filter backend lint",
     "lint-app": "pnpm --filter frontend lint",
+    "test": "pnpm --filter backend test",
+    "test-api": "pnpm --filter backend test",
+    "test-app": "pnpm --filter frontend test",
+    "test:watch": "pnpm --filter backend test:watch",
+    "test:cov": "pnpm --filter backend test:cov",
+    "test:e2e": "pnpm --filter backend test:e2e",
     "clean": "pnpm --filter backend clean && pnpm --filter frontend clean",
     "clean-api": "pnpm --filter backend clean",
     "clean-app": "pnpm --filter frontend clean"
