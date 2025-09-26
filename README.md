@@ -71,6 +71,7 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 - **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
 - **[🤖 Estudo de IA Agentic](./apps/ia/README.md)** - Estudo profundo sobre criação de agentes inteligentes com LangGraph
 - **[📋 Workflows e Agentes](./apps/ia/docs/workflows-and-agents.md)** - Guia completo sobre diferenças e aplicabilidades de workflows vs agentes
+- **[🧠 RAG com ChromaDB](./apps/ia/docs/rag.md)** - Guia completo para implementar sistemas RAG robustos com persistência
   
 ## 🛠️ Como executar a aplicação
 
@@ -331,3 +332,4 @@ O estudo inclui um **Task Generator Agent** completo que demonstra todos os conc
 - **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
 - **[🤖 Estudo de IA Agentic](./apps/ia/README.md)** - Estudo profundo sobre criação de agentes inteligentes com LangGraph
 - **[📋 Workflows e Agentes](./apps/ia/docs/workflows-and-agents.md)** - Guia completo sobre diferenças e aplicabilidades de workflows vs agentes
+- **[🧠 RAG com ChromaDB](./apps/ia/docs/rag.md)** - Guia completo para implementar sistemas RAG robustos com persistência
