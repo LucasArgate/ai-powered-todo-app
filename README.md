@@ -15,9 +15,13 @@ Imagine que você precisa **"planejar uma viagem para o Japão"**. Em vez de pen
 
 ### 🎬 Preview da Aplicação
 
-[![Preview da Aplicação](https://img.shields.io/badge/🎬-Assistir%20Preview-blue?style=for-the-badge)](./docs/material/preview-app-banner.mp4)
+<div align="center">
 
-*Clique no botão acima para assistir ao preview da aplicação em ação! Interface moderna, geração inteligente de tarefas e experiência de usuário otimizada.*
+[![Preview da Aplicação](https://img.youtube.com/vi/4KOydEUjCdo/maxresdefault.jpg)](https://www.youtube.com/watch?v=4KOydEUjCdo)
+
+*Clique na imagem para assistir ao preview da aplicação em ação! Interface moderna, geração inteligente de tarefas e experiência de usuário otimizada.*
+
+</div>
 
 ## 🚀 Tecnologias Utilizadas
 
