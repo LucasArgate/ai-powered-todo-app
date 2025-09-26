@@ -1,0 +1,31 @@
+# Task Generator Agent - Dependências
+# Seguindo estratégia definida nos documentos
+
+# LangGraph para orquestração de agentes
+langgraph>=0.1.0
+
+# LangChain para componentes de IA
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-community>=0.1.0
+
+# LangSmith para observabilidade
+langsmith>=0.1.0
+
+# Modelos de linguagem
+langchain-anthropic>=0.1.0  # Para Claude
+langchain-openai>=0.1.0     # Para OpenAI (opcional)
+
+# Utilitários
+python-dotenv>=1.0.0        # Para variáveis de ambiente
+pydantic>=2.0.0             # Para validação de dados
+typing-extensions>=4.0.0    # Para tipos avançados
+
+# Persistência (baseado na estratégia)
+sqlite3  # Incluído no Python padrão
+
+# JSON e estruturas de dados
+uuid     # Incluído no Python padrão
+datetime # Incluído no Python padrão
+json     # Incluído no Python padrão
+enum     # Incluído no Python padrão
