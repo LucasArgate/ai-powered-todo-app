@@ -229,6 +229,45 @@ Usuário
 - **Responsive Design**: Interface adaptável para todos os dispositivos
 
 
+## 🤖 Workflows vs Agentes: Diferenças e Aplicabilidades
+
+### 📊 Diferenças Fundamentais
+
+| Aspecto | **Workflows** | **Agentes** |
+|---------|---------------|-------------|
+| **Estrutura** | Caminhos predeterminados e sequenciais | Processos dinâmicos e adaptativos |
+| **Controle** | Fluxo fixo e previsível | Autonomia na tomada de decisões |
+| **Flexibilidade** | Baixa - segue regras definidas | Alta - comportamento emergente |
+| **Casos de Uso** | Tarefas estruturadas e repetitivas | Problemas complexos e imprevisíveis |
+
+### 🏢 Aplicabilidades Empresariais
+
+#### **Workflows** - Para Processos Padronizados
+- **RH**: Onboarding de funcionários, avaliações de performance
+- **Financeiro**: Processamento de pagamentos, reconciliação bancária
+- **Vendas**: Follow-up de leads, geração de propostas
+- **Marketing**: Campanhas automatizadas, análise de métricas
+
+#### **Agentes** - Para Desafios Complexos
+- **RH**: Análise de fit cultural, recomendações de contratação
+- **Financeiro**: Análise de risco, detecção de fraudes
+- **Vendas**: Estratégias personalizadas por cliente
+- **Marketing**: Otimização de campanhas em tempo real
+
+### 🎯 Quando Usar Cada Abordagem
+
+**Use Workflows quando:**
+- ✅ Processo bem definido e repetitivo
+- ✅ Resultados previsíveis e consistentes
+- ✅ Necessidade de controle total sobre execução
+- ✅ Conformidade com regulamentações específicas
+
+**Use Agentes quando:**
+- ✅ Problemas complexos e únicos
+- ✅ Necessidade de adaptação dinâmica
+- ✅ Tomada de decisões baseada em contexto
+- ✅ Aprendizado contínuo e melhoria
+
 ## 🤖 Resumo do Estudo de IA Agentic
 
 ### 🎯 Goal (Objetivo)
@@ -290,3 +329,4 @@ O estudo inclui um **Task Generator Agent** completo que demonstra todos os conc
 - **[Frontend README](./apps/frontend/README.md)** - Documentação da interface Next.js
 - **[Frontend Highlights](./docs/frontend-highlights.md)** - Destaques técnicos da implementação
 - **[🤖 Estudo de IA Agentic](./apps/ia/README.md)** - Estudo profundo sobre criação de agentes inteligentes com LangGraph
+- **[📋 Workflows e Agentes](./apps/ia/docs/workflows-and-agents.md)** - Guia completo sobre diferenças e aplicabilidades de workflows vs agentes

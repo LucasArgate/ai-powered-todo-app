@@ -1,7 +1,10 @@
+# Estratégia Técnica
+
 ## tech strategy
 
 **Apresentar a simplicidade e praticidade de criar um Agentic, react agentic baseado em princípios sólidos:**
 
+- [Workflows and Agents](./workflows-and-agents.md)
 - [Persistence](./strategy/persistence.md)
 - [Durable execution](./strategy/durable-execution.md)
 - [Streaming](./strategy/streaming.md)
@@ -10,13 +13,10 @@
 - [Add and manage memory](./strategy/memory.md)
 - [Subgraphs](./strategy/subgraphs.md)
 
-
 ### Sobre o LangGraph
 LangGraph é uma estrutura de orquestração de baixo nível para criar, gerenciar e implantar agentes com estado e de longa duração. Algumas empresas que moldam o futuro dos agentes, incluindo Klarna, Replit, Elastic e outras, utilizam frameworks como LangGraph.
 
-
 O LangGraph é um ambiente de nível muito baixo e focado inteiramente na orquestração de agentes. Antes de usar o LangGraph, é recomendável que você se familiarize com alguns dos componentes usados ​​para construir agentes, começando pelos modelos e ferramentas. Usaremos componentes do LangChain com frequência ao longo da documentação, mas você não precisa usar o LangChain para usar o LangGraph.
-
 
 ```python
 # Step 0: Define tools and model
@@ -261,40 +261,48 @@ client = Client(api_key="your-api-key")
 
 **Conclusão**: Assim como não desenvolveríamos uma aplicação web sem logs e métricas, não devemos construir agentes LangGraph sem observabilidade. O LangSmith não é apenas uma ferramenta de debugging - é o que torna possível operar agentes de IA em escala e com confiança.
 
-
-
 ## Por que Python para criar um Agentic AI?
 
 Para a criação de um *Agentic AI* (IA com agentes), uma classe de sistemas de inteligência artificial projetados para agir de forma autônoma para atingir objetivos, a escolha da linguagem de programação é uma decisão fundamental. Embora TypeScript (TS) e JavaScript (JS) sejam potentes, especialmente no desenvolvimento web, Python se destaca como a opção superior para o núcleo de um *Agentic AI*. Aqui estão 10 motivos para essa preferência:
 
 ### 1. Ecossistema de IA e Machine Learning Inigualável
+
 Python é o padrão de fato para o desenvolvimento de IA e *Machine Learning*. A maturidade e a abrangência de suas bibliotecas são incomparáveis. Frameworks como **LangChain** e **LlamaIndex**, essenciais para a construção de agentes que interagem com modelos de linguagem (LLMs), são desenvolvidos primariamente em Python. Ferramentas de aprendizado de máquina como **TensorFlow**, **PyTorch** e **scikit-learn** são mais robustas, possuem mais recursos e têm maior suporte da comunidade em Python do que suas contrapartes em JavaScript.
 
 ### 2. Poder em Computação Científica e Manipulação de Dados
+
 Um *Agentic AI* frequentemente precisa processar e analisar grandes volumes de dados para tomar decisões. Python domina este campo com bibliotecas como **NumPy** para operações numéricas eficientes e **Pandas** para manipulação e análise de dados estruturados. Essas ferramentas, otimizadas para performance, não têm equivalentes diretos em TS/JS em termos de funcionalidade e eficiência para tarefas de dados em larga escala.
 
 ### 3. Acesso Direto e Antecipado aos Melhores Frameworks de IA
+
 As principais inovações em IA, especialmente em modelos de linguagem e aprendizado profundo, são lançadas com APIs e suporte "Python-first". Empresas como OpenAI, Google e Meta disponibilizam suas ferramentas e modelos mais avançados primeiramente para o ecossistema Python. Isso significa que ao usar Python, você terá acesso imediato e completo às tecnologias de ponta necessárias para construir agentes inteligentes e competitivos.
 
 ### 4. Comunidade Focada em Pesquisa e Desenvolvimento de IA
+
 A vasta maioria da comunidade acadêmica e de pesquisa em IA utiliza Python. Isso se traduz em uma abundância de artigos, tutoriais, fóruns de discussão e soluções de problemas disponíveis. Se você encontrar um desafio complexo ao desenvolver seu agente, a probabilidade de encontrar suporte e exemplos de código relevantes na comunidade Python é muito maior.
 
 ### 5. Vasta Disponibilidade de Talentos Especializados
+
 Devido ao seu domínio no campo da IA, o mercado de trabalho possui um número significativamente maior de desenvolvedores, engenheiros de machine learning e cientistas de dados com profunda experiência em Python para IA. Ao optar por Python, você facilita a contratação de profissionais qualificados para construir e manter seu *Agentic AI*.
 
 ### 6. Desempenho Superior para Tarefas Intensivas em CPU
+
 A lógica de um *Agentic AI*, que envolve planejamento, raciocínio e processamento de dados, é frequentemente uma tarefa intensiva em CPU. Embora o Node.js (ambiente de execução do JS/TS) seja excelente para operações de I/O (entrada/saída), muitas das bibliotecas científicas de Python são, na verdade, invólucros para código C ou C++ de alta performance. Isso permite que Python execute cálculos matemáticos e algoritmos complexos de forma muito mais eficiente.
 
 ### 7. Simplicidade e Legibilidade para Lógica Complexa
+
 A sintaxe de Python é conhecida por sua clareza e legibilidade, o que é uma vantagem crucial ao desenvolver os algoritmos complexos que governam o comportamento de um agente. A capacidade de expressar a lógica de planejamento e tomada de decisão de forma concisa e compreensível facilita o desenvolvimento, a depuração e a manutenção do sistema.
 
 ### 8. Ferramentas Completas para Todo o Ciclo de Vida da IA
+
 O ecossistema Python oferece suporte para todas as etapas do desenvolvimento de um *Agentic AI*. Desde a fase de experimentação e prototipagem, com ferramentas como **Jupyter Notebooks**, até a produção e o monitoramento, com plataformas de MLOps que geralmente possuem uma integração mais robusta e nativa com Python.
 
 ### 9. Integração Perfeita com Fontes de Dados
+
 Agentes de IA precisam interagir com uma variedade de fontes de dados, como bancos de dados, APIs e arquivos. Python possui uma coleção vasta e madura de conectores e bibliotecas para praticamente qualquer tipo de fonte de dados imaginável, tornando a tarefa de coletar as informações necessárias para a tomada de decisão do agente mais simples e direta.
 
 ### 10. Adoção Corporativa e Suporte dos Grandes Provedores de Nuvem
+
 As principais plataformas de nuvem, como Google Cloud, AWS e Microsoft Azure, construíram seus serviços de IA e *Machine Learning* com um forte foco em Python. Seus SDKs e APIs são primariamente projetados para interagir com aplicações em Python, o que garante uma implantação e escalabilidade mais suaves e bem documentadas para o seu *Agentic AI* no ambiente de produção.
 
 Em resumo, enquanto TS/JS são excelentes para construir as interfaces de usuário com as quais os usuários interagirão com os agentes, o "cérebro" do *Agentic AI* – sua lógica principal, capacidade de decisão e processamento de dados – é mais eficientemente e robustamente construído com Python, aproveitando seu ecossistema inigualável, desempenho em computação e o vasto suporte da comunidade de IA.
