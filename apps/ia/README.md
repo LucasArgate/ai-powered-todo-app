@@ -4,6 +4,19 @@ Um agentic inteligente para geração de tarefas baseado em goals, implementado 
 
 ## 🎯 Funcionalidades Principais
 
+### Estratégia Seguida 🧠
+Este agente implementa uma **estratégia robusta baseada em 7 pilares fundamentais** do LangGraph:
+
+- **💾 Persistência**: Estado mantido entre execuções com checkpointing automático
+- **🔄 Execução Durável**: Resistência a falhas e recuperação automática de estado  
+- **📡 Streaming**: Feedback em tempo real durante processamento
+- **👤 Human-in-the-Loop**: Pontos de validação humana quando necessário
+- **🧠 Memória**: Contexto acumulado entre interações e aprendizado progressivo
+- **🔗 Subgrafos**: Arquitetura modular e reutilizável para componentes complexos
+- **⏰ Time Travel**: Navegação temporal para debugging e auditoria completa
+
+📖 **[Ver estratégia completa](./docs/strategy.md)** - Documentação detalhada dos princípios estratégicos
+
 ### 1. Validação de Intenção ✅
 - Analisa a viabilidade do goal fornecido
 - Calcula porcentagem de viabilidade baseada em fatores como clareza, especificidade e alcançabilidade
@@ -94,31 +107,46 @@ Para o goal "Planejar uma viagem para o Japão", o agente gera:
 
 ## 🧠 Arquitetura do Agente
 
-O agente segue os princípios estratégicos definidos nos documentos:
+O agente implementa uma **arquitetura robusta baseada nos 7 pilares estratégicos** do LangGraph:
 
 ### 1. **Persistence** 💾
-- Estado mantido entre execuções
+- Estado mantido entre execuções com checkpointing automático
 - Suporte a múltiplas sessões simultâneas
+- Recuperação exata do ponto de interrupção
 
 ### 2. **Durable Execution** 🔄
-- Resistência a falhas
-- Recuperação automática de estado
+- Resistência a falhas e reinicializações
+- Recuperação automática de estado sem reprocessamento
+- Workflows que podem levar horas ou dias para completar
 
-### 3. **Streaming** 📡 
+### 3. **Streaming** 📡
 - Feedback em tempo real durante processamento
-- Atualizações de progresso
+- Transmissão de dados conforme são gerados
+- Experiência do usuário mais interativa e responsiva
 
 ### 4. **Human-in-the-Loop** 👤
 - Pontos de validação humana quando necessário
 - Sistema de feedback para melhoria contínua
+- Intervenção em decisões críticas ou sensíveis
 
 ### 5. **Memory** 🧠
 - Contexto acumulado entre interações
 - Aprendizado baseado em histórico
+- Personalização progressiva do sistema
+
+### 6. **Subgrafos** 🔗
+- Arquitetura modular e reutilizável
+- Componentes independentes e testáveis
+- Composição flexível de workflows complexos
+
+### 7. **Time Travel** ⏰
+- Navegação temporal para debugging avançado
+- Auditoria completa de todas as ações
+- Capacidade de "desfazer" e reexecutar
 
 ## 🛠️ Estrutura do Código
 
-```
+```text
 📁 Projeto
 ├── 📄 task_generator_agent.py    # Agente principal
 ├── 📄 exemplo_viagem_japao.py    # Exemplo prático
@@ -187,12 +215,14 @@ step_templates = {
 
 ## 🤝 Contribuindo
 
-O projeto segue os princípios de Clean Code e as estratégias definidas nos documentos:
+O projeto segue os princípios de Clean Code e implementa a **estratégia robusta dos 7 pilares**:
 
-1. 📚 Use a pasta `docs/` como base de conhecimento
-2. 🏗️ Siga a estratégia definida em arquivos e pastas
-3. 🧹 Aplique conceitos de Clean Code
-4. 🌍 Prompts em inglês, respostas em português para usuários
+1. 📚 **Base de Conhecimento**: Use a pasta `docs/strategy/` como referência
+2. 🏗️ **Arquitetura**: Implemente os 7 pilares estratégicos (Persistência, Execução Durável, Streaming, HITL, Memória, Subgrafos, Time Travel)
+3. 🧹 **Clean Code**: Aplique conceitos de código limpo e modular
+4. 🌍 **Internacionalização**: Prompts em inglês, respostas em português para usuários
+5. 🔗 **Modularidade**: Use subgrafos para componentes reutilizáveis
+6. 📊 **Observabilidade**: Integre LangSmith para monitoramento completo
 
 ## 📝 Próximos Passos
 
@@ -207,6 +237,8 @@ O projeto segue os princípios de Clean Code e as estratégias definidas nos doc
 
 Para dúvidas ou sugestões sobre o Task Generator Agent, consulte:
 
-1. 📖 Documentação na pasta `docs/`
-2. 💡 Exemplos práticos em `exemplo_viagem_japao.py`
-3. 🔧 Código fonte comentado em `task_generator_agent.py`
+1. 📖 **[Estratégia Completa](./docs/strategy.md)** - Os 7 pilares fundamentais
+2. 📚 **[Documentação Detalhada](./docs/strategy/)** - Implementação de cada pilar
+3. 💡 **Exemplos Práticos** em `exemplo_viagem_japao.py`
+4. 🔧 **Código Fonte** comentado em `task_generator_agent.py`
+5. 🎯 **[Goal Documentation](./docs/goal.md)** - Objetivos do projeto
